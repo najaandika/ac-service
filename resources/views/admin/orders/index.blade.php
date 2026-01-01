@@ -65,7 +65,7 @@
                         <span class="mx-1">•</span>
                         <span>{{ $order->scheduled_date->translatedFormat('d F Y') }}</span>
                     </div>
-                    <div class="font-bold text-primary">{{ $order->formatted_total }}</div>
+                    <div class="font-semibold text-green-600">{{ $order->formatted_total }}</div>
                 </div>
                 @if($order->technician)
                 <div class="flex items-center gap-2 mt-2 text-xs text-gray-500">
@@ -126,7 +126,7 @@
                                 <span class="text-xs text-gray-400">Belum ditugaskan</span>
                             @endif
                         </td>
-                        <td class="py-4 font-bold text-primary">{{ $order->formatted_total }}</td>
+                        <td class="py-4 font-semibold text-green-600">{{ $order->formatted_total }}</td>
                         <td class="py-4">
                             <span class="badge badge-{{ $order->status_color }}">{{ $order->status_label }}</span>
                         </td>

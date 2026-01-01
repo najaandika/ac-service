@@ -19,11 +19,18 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/layanan', [ServiceController::class, 'index'])->name('services.index');
 Route::get('/layanan/{slug}', [ServiceController::class, 'show'])->name('services.show');
 
+// Testimoni route
+Route::get('/testimoni', [\App\Http\Controllers\TestimoniController::class, 'index'])->name('testimoni.index');
+
 // Order routes
 Route::get('/order', [OrderController::class, 'create'])->name('order.create');
 Route::post('/order', [OrderController::class, 'store'])->name('order.store');
 Route::get('/order/success', [OrderController::class, 'success'])->name('order.success');
 Route::get('/track', [OrderController::class, 'track'])->name('order.track');
+
+// Rating routes
+Route::get('/order/{code}/rate', [\App\Http\Controllers\RatingController::class, 'show'])->name('order.rate.show');
+Route::post('/order/{code}/rate', [\App\Http\Controllers\RatingController::class, 'store'])->name('order.rate.store');
 
 // Auth routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -42,6 +49,8 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
 
     // Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
+    Route::get('/reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
 
     // Service management
     Route::resource('services', AdminServiceController::class);
@@ -54,6 +63,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     // Customer management (view-only)
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
     Route::get('/customers/{customer}', [CustomerController::class, 'show'])->name('customers.show');
+    Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
 
     // Settings
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');

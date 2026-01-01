@@ -28,6 +28,12 @@
                     <span class="group-hover:text-primary">Kenapa Kami</span>
                 </div>
             </a>
+            <a href="/testimoni" onclick="toggleMobileSidebar()" class="block">
+                <div class="nav-item nav-item-inactive group">
+                    <i data-lucide="star" class="w-5 h-5 text-gray-600 group-hover:text-primary"></i>
+                    <span class="group-hover:text-primary">Testimoni</span>
+                </div>
+            </a>
             <a href="/#cara-order" onclick="toggleMobileSidebar()" class="block">
                 <div class="nav-item nav-item-inactive group">
                     <i data-lucide="list-ordered" class="w-5 h-5 text-gray-600 group-hover:text-primary"></i>

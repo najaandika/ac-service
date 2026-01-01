@@ -31,6 +31,16 @@
                 </button>
                 <a href="{{ route('admin.reports.index') }}" class="btn btn-outline flex-1 md:flex-none justify-center">Reset</a>
             </div>
+            <div class="flex gap-2 w-full md:w-auto border-l pl-4 ml-2">
+                <a href="{{ route('admin.reports.export.excel', ['start_date' => $startDate, 'end_date' => $endDate]) }}" class="btn btn-outline flex-1 md:flex-none justify-center text-green-600 border-green-600 hover:bg-green-50">
+                    <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                    Excel
+                </a>
+                <a href="{{ route('admin.reports.export.pdf', ['start_date' => $startDate, 'end_date' => $endDate]) }}" class="btn btn-outline flex-1 md:flex-none justify-center text-red-600 border-red-600 hover:bg-red-50">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                    PDF
+                </a>
+            </div>
         </form>
     </x-cards.card>
 
@@ -107,7 +117,7 @@
                     </div>
                     <div class="bg-white rounded-lg p-2">
                         <p class="text-xs text-gray-500">Pendapatan</p>
-                        <p class="font-bold text-primary text-sm">Rp {{ number_format(($tech->orders_sum_total_price ?? 0) / 1000, 0) }}K</p>
+                        <p class="font-semibold text-green-600 text-sm">Rp {{ number_format(($tech->orders_sum_total_price ?? 0) / 1000, 0) }}K</p>
                     </div>
                     <div class="bg-white rounded-lg p-2">
                         <p class="text-xs text-gray-500">Rating</p>
@@ -146,7 +156,7 @@
                         <td class="py-4 text-center">
                             <span class="font-bold text-foreground">{{ $tech->orders_count }}</span>
                         </td>
-                        <td class="py-4 text-right font-bold text-primary">
+                        <td class="py-4 text-right font-semibold text-green-600">
                             Rp {{ number_format($tech->orders_sum_total_price ?? 0, 0, ',', '.') }}
                         </td>
                         <td class="py-4 text-center">

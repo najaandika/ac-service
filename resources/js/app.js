@@ -13,6 +13,7 @@ import { toggleSidebar, initAccordions } from './modules/sidebar';
 import { openModal, closeModal } from './modules/modal';
 import { togglePassword } from './modules/forms';
 import { initDashboardCharts } from './modules/charts';
+import './scroll-animation';
 
 // Register Alpine components
 Alpine.data('quickOrder', (config) => ({

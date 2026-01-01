@@ -55,7 +55,7 @@ class Service extends Model
 
     public function getFormattedPriceAttribute(): string
     {
-        return 'Rp ' . number_format($this->price, 0, ',', '.');
+        return \App\Helpers\FormatHelper::rupiah($this->price);
     }
 
     public function getPriceForCapacity(string $capacity): ?ServicePrice
@@ -67,7 +67,7 @@ class Service extends Model
     {
         $minPrice = $this->prices()->min('price');
         if ($minPrice) {
-            return 'Mulai Rp ' . number_format($minPrice, 0, ',', '.');
+            return 'Mulai ' . \App\Helpers\FormatHelper::rupiah($minPrice);
         }
         return $this->formatted_price;
     }
@@ -76,7 +76,7 @@ class Service extends Model
     {
         $minPrice = $this->prices()->min('price');
         if ($minPrice) {
-            return 'Rp ' . number_format($minPrice, 0, ',', '.');
+            return \App\Helpers\FormatHelper::rupiah($minPrice);
         }
         return $this->formatted_price;
     }

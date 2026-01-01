@@ -52,10 +52,14 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $order->load(['customer', 'service', 'technician']);
+        $order->load(['customer', 'service', 'technician', 'review']);
         $technicians = Technician::active()->get();
+        
+        // Generate WhatsApp URL
+        $whatsappService = new \App\Services\WhatsAppService();
+        $whatsappUrl = $whatsappService->generateOrderStatusUrl($order);
 
-        return view('admin.orders.show', compact('order', 'technicians'));
+        return view('admin.orders.show', compact('order', 'technicians', 'whatsappUrl'));
     }
 
     /**

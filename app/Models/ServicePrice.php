@@ -24,7 +24,7 @@ class ServicePrice extends Model
 
     public function getFormattedPriceAttribute(): string
     {
-        return 'Rp ' . number_format($this->price, 0, ',', '.');
+        return \App\Helpers\FormatHelper::rupiah($this->price);
     }
 
     public function getCapacityLabelAttribute(): string

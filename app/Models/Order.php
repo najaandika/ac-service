@@ -74,7 +74,7 @@ class Order extends Model
 
     public function getFormattedTotalAttribute(): string
     {
-        return 'Rp ' . number_format($this->total_price, 0, ',', '.');
+        return \App\Helpers\FormatHelper::rupiah($this->total_price);
     }
 
     public function getStatusLabelAttribute(): string
@@ -111,5 +111,21 @@ class Order extends Model
             'sore' => '15:00 - 18:00',
             default => $this->scheduled_time,
         };
+    }
+
+    /**
+     * Get the review for this order.
+     */
+    public function review(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Review::class);
+    }
+
+    /**
+     * Check if order has been reviewed.
+     */
+    public function hasReview(): bool
+    {
+        return $this->review()->exists();
     }
 }

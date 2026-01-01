@@ -100,11 +100,18 @@
                             <span class="font-bold text-foreground">{{ $customer->orders_count }}</span>
                         </td>
                         <td class="py-4">
-                            <div class="flex items-center justify-end">
+                            <div class="flex items-center justify-end gap-2">
                                 <a href="{{ route('admin.customers.show', $customer) }}" class="btn btn-sm btn-outline" title="Lihat Detail">
                                     <i data-lucide="eye" class="w-4 h-4"></i>
                                     <span class="hidden lg:inline ml-1">Detail</span>
                                 </a>
+                                <form action="{{ route('admin.customers.destroy', $customer) }}" method="POST" onsubmit="return confirm('Yakin hapus pelanggan {{ $customer->name }}?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline text-red-500 border-red-300 hover:bg-red-50" title="Hapus">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>

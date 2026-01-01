@@ -35,7 +35,7 @@
                         <h3 class="font-bold text-lg text-foreground">{{ $order->service->name }}</h3>
                     </div>
                     <div class="text-right">
-                        <p class="text-2xl font-bold text-primary">{{ $order->formatted_total }}</p>
+                        <p class="text-2xl font-bold text-green-600">{{ $order->formatted_total }}</p>
                     </div>
                 </div>
 
@@ -119,6 +119,32 @@
                     @endif
                 </div>
             </x-cards.card>
+
+            <!-- Customer Review -->
+            @if($order->review)
+            <x-cards.card title="Rating Pelanggan">
+                <div class="flex items-center gap-4 mb-4">
+                    <x-star-rating :rating="$order->review->rating" size="lg" />
+                    <span class="text-2xl font-bold text-foreground">{{ $order->review->rating }}/5</span>
+                </div>
+                @if($order->review->comment)
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <p class="text-gray-700 italic">"{{ $order->review->comment }}"</p>
+                </div>
+                @endif
+                <p class="text-xs text-gray-500 mt-3">
+                    Diberikan pada {{ $order->review->created_at->translatedFormat('d F Y, H:i') }}
+                </p>
+            </x-cards.card>
+            @elseif($order->status === 'completed')
+            <x-cards.card title="Rating Pelanggan">
+                <div class="text-center py-4 text-gray-500">
+                    <i data-lucide="star-off" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+                    <p>Belum ada rating dari pelanggan</p>
+                    <p class="text-xs mt-1">Link rating: <span class="font-mono text-primary">{{ url("/order/{$order->order_code}/rate") }}</span></p>
+                </div>
+            </x-cards.card>
+            @endif
         </div>
 
         <!-- Sidebar Actions -->
@@ -143,6 +169,14 @@
                         </button>
                     </div>
                 </form>
+                
+                <!-- WhatsApp Notification Button -->
+                <div class="mt-4 pt-4 border-t">
+                    <a href="{{ $whatsappUrl }}" target="_blank" class="btn btn-outline w-full justify-center text-green-600 border-green-600 hover:bg-green-50">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        Kirim Notifikasi WA
+                    </a>
+                </div>
             </x-cards.card>
 
             <!-- Assign Technician -->

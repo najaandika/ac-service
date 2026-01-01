@@ -91,4 +91,28 @@ class ReportController extends Controller
             'data' => $services->pluck('orders_count')->toArray(),
         ];
     }
+
+    /**
+     * Export orders to Excel (CSV format)
+     */
+    public function exportExcel(Request $request)
+    {
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        
+        $exporter = new \App\Exports\OrdersExport($startDate, $endDate);
+        return $exporter->toExcel();
+    }
+
+    /**
+     * Export orders to PDF (printable HTML)
+     */
+    public function exportPdf(Request $request)
+    {
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        
+        $exporter = new \App\Exports\OrdersExport($startDate, $endDate);
+        return $exporter->toPdf();
+    }
 }

@@ -91,6 +91,29 @@
                             Teknisi sedang dijadwalkan oleh admin.
                         </div>
                         @endif
+
+                        <!-- Rating Button for Completed Orders -->
+                        @if($order->status === 'completed')
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            @if($order->hasReview())
+                            <div class="bg-green-50 rounded-xl p-4">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <p class="text-sm font-medium text-green-800">Rating Anda:</p>
+                                    <x-star-rating :rating="$order->review->rating" size="sm" />
+                                </div>
+                                @if($order->review->comment)
+                                <p class="text-sm text-gray-600 italic">"{{ $order->review->comment }}"</p>
+                                @endif
+                            </div>
+                            @else
+                            <a href="{{ route('order.rate.show', $order->order_code) }}" class="btn btn-primary w-full justify-center">
+                                <i data-lucide="star" class="w-5 h-5"></i>
+                                Berikan Rating
+                            </a>
+                            <p class="text-xs text-gray-500 text-center mt-2">Bantu kami meningkatkan layanan dengan rating Anda</p>
+                            @endif
+                        </div>
+                        @endif
                     </div>
                     @endforeach
                 </div>

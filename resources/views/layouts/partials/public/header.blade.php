@@ -18,6 +18,7 @@
             <div class="hidden md:flex items-center gap-8">
                 <a href="/#layanan" class="text-gray-600 hover:text-primary transition-colors">Layanan</a>
                 <a href="/#kenapa-kami" class="text-gray-600 hover:text-primary transition-colors">Kenapa Kami</a>
+                <a href="/testimoni" class="text-gray-600 hover:text-primary transition-colors">Testimoni</a>
                 <a href="/#cara-order" class="text-gray-600 hover:text-primary transition-colors">Cara Order</a>
                 <a href="/#kontak" class="text-gray-600 hover:text-primary transition-colors">Kontak</a>
             </div>
