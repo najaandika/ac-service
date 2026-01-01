@@ -1,0 +1,27 @@
+/**
+ * Base Styles - Utilities and element defaults
+ */
+
+/* Alpine.js x-cloak - Hide elements until Alpine is ready */
+[x-cloak] {
+    display: none !important;
+}
+
+
+/* Custom Select Dropdown */
+select {
+    @apply appearance-none bg-no-repeat cursor-pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-position: right 10px center;
+    padding-right: 40px;
+}
+
+/* Hide Scrollbar */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

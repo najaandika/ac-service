@@ -1,0 +1,17 @@
+/**
+ * AC Service - Main Stylesheet Entry
+ * Imports Tailwind and all CSS modules
+ */
+
+@import 'tailwindcss';
+
+/* Tailwind source paths for purging */
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/* Import CSS Modules */
+@import './modules/theme.css';
+@import './modules/base.css';
+@import './modules/components.css';

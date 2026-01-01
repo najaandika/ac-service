@@ -1,0 +1,169 @@
+/**
+ * Component Styles - Reusable UI components
+ */
+
+/* Card Component */
+.card {
+    @apply bg-muted rounded-[var(--radius-card)] pt-5 px-3 pb-3;
+}
+
+.card-inner {
+    @apply bg-white rounded-[var(--radius-card)] p-5;
+}
+
+/* Button Component */
+.btn {
+    @apply flex items-center gap-2 px-4 py-2.5 rounded-[var(--radius-button)] font-medium transition-all duration-200 cursor-pointer;
+}
+
+.btn-primary {
+    @apply bg-primary text-white hover:bg-primary-hover;
+}
+
+.btn-outline {
+    @apply border border-border text-foreground hover:border-primary;
+}
+
+.btn-error {
+    @apply bg-red-500 text-white hover:bg-red-600;
+}
+
+.btn-success {
+    @apply bg-green-500 text-white hover:bg-green-600;
+}
+
+.btn-warning {
+    @apply bg-amber-500 text-white hover:bg-amber-600;
+}
+
+/* Stat Card */
+.stat-card {
+    @apply bg-muted rounded-[var(--radius-card)] pt-5 px-3 pb-3;
+}
+
+.stat-card-inner {
+    @apply bg-white rounded-[var(--radius-card)] p-5;
+}
+
+.stat-value {
+    @apply text-foreground text-3xl font-bold mb-1;
+}
+
+.stat-label {
+    @apply text-foreground text-base font-semibold ml-3 mb-4;
+}
+
+/* Icon Box */
+.icon-box {
+    @apply w-16 h-16 rounded-[var(--radius-icon)] flex items-center justify-center;
+}
+
+.icon-box-lime {
+    @apply bg-accent-lime;
+}
+
+.icon-box-teal {
+    @apply bg-accent-teal;
+}
+
+.icon-box-peach {
+    @apply bg-accent-peach;
+}
+
+/* Status Badges */
+.badge {
+    @apply text-xs font-medium px-2 py-1 rounded-full;
+}
+
+.badge-success {
+    @apply bg-success-light text-success-dark;
+}
+
+.badge-warning {
+    @apply bg-warning-light text-warning-dark;
+}
+
+.badge-info {
+    @apply bg-info-light text-info-dark;
+}
+
+.badge-error {
+    @apply bg-error-light text-error-dark;
+}
+
+.badge-alert {
+    @apply bg-alert-light text-alert-dark;
+}
+
+/* Sidebar Navigation */
+.nav-item {
+    @apply flex items-center gap-2.5 px-4 py-3 rounded-[var(--radius-card)] transition-all duration-200 font-medium text-[15px];
+}
+
+.nav-item-active {
+    @apply bg-primary text-white;
+}
+
+.nav-item-inactive {
+    @apply hover:bg-gray-100 text-foreground;
+}
+
+/* Form Inputs */
+.form-input {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-[var(--radius-button)] text-foreground bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200;
+}
+
+.form-select {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-[var(--radius-button)] text-foreground bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 appearance-none cursor-pointer;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+}
+
+.form-checkbox {
+    @apply w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary;
+}
+
+.form-input-icon {
+    @apply pl-12;
+}
+
+/* List Items */
+.list-item {
+    @apply flex gap-4 border-b border-gray-100 pb-4 last:border-0 last:pb-0;
+}
+
+.list-item-image {
+    @apply w-16 h-16 rounded-lg object-cover flex-shrink-0;
+}
+
+.list-item-icon {
+    @apply w-16 h-16 rounded-lg flex items-center justify-center flex-shrink-0;
+}
+
+/* Toggle Switch (Filament-style) */
+.toggle-switch {
+    @apply relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 cursor-pointer;
+}
+
+.toggle-switch-active {
+    @apply bg-success;
+}
+
+.toggle-switch-inactive {
+    @apply bg-gray-300;
+}
+
+.toggle-switch-dot {
+    @apply inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-200;
+}
+
+.toggle-switch-dot-active {
+    @apply translate-x-5;
+}
+
+.toggle-switch-dot-inactive {
+    @apply translate-x-0.5;
+}
