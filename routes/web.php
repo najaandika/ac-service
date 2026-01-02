@@ -68,5 +68,22 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     // Settings
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
+    
+    // Notification API endpoints (for AJAX polling)
+    Route::get('/api/pending-orders-count', function () {
+        return response()->json([
+            'count' => \App\Models\Order::where('status', 'pending')->count()
+        ]);
+    })->name('api.pending-orders-count');
+    
+    Route::get('/api/notification-settings', function () {
+        return response()->json([
+            'enabled' => \App\Models\Setting::get('notification_enabled', '1') === '1',
+            'interval' => (int) \App\Models\Setting::get('notification_interval', 30),
+            'audioUrl' => \App\Models\Setting::get('notification_audio') 
+                ? asset('storage/' . \App\Models\Setting::get('notification_audio')) 
+                : null
+        ]);
+    })->name('api.notification-settings');
 });
 

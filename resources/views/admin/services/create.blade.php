@@ -20,32 +20,32 @@
         <x-cards.card title="Informasi Dasar">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Layanan <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" value="{{ old('name') }}" class="form-input w-full @error('name') border-red-500 @enderror" placeholder="Contoh: Cuci AC" required>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Layanan <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-input w-full @error('name') border-red-500 @enderror" placeholder="Contoh: Cuci AC" required autocomplete="off">
                     @error('name')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
                 
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi <span class="text-red-500">*</span></label>
-                    <textarea name="description" rows="3" class="form-input w-full @error('description') border-red-500 @enderror" placeholder="Jelaskan layanan ini..." required>{{ old('description') }}</textarea>
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi <span class="text-red-500">*</span></label>
+                    <textarea name="description" id="description" rows="3" class="form-input w-full @error('description') border-red-500 @enderror" placeholder="Jelaskan layanan ini..." required autocomplete="off">{{ old('description') }}</textarea>
                     @error('description')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Durasi (menit) <span class="text-red-500">*</span></label>
-                    <input type="number" name="duration_minutes" value="{{ old('duration_minutes', 45) }}" min="15" class="form-input w-full @error('duration_minutes') border-red-500 @enderror" required>
+                    <label for="duration_minutes" class="block text-sm font-medium text-gray-700 mb-1">Durasi (menit) <span class="text-red-500">*</span></label>
+                    <input type="number" name="duration_minutes" id="duration_minutes" value="{{ old('duration_minutes', 45) }}" min="15" class="form-input w-full @error('duration_minutes') border-red-500 @enderror" required autocomplete="off">
                     @error('duration_minutes')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Icon <span class="text-red-500">*</span></label>
-                    <select name="icon" class="form-select w-full @error('icon') border-red-500 @enderror" required>
+                    <label for="icon" class="block text-sm font-medium text-gray-700 mb-1">Icon <span class="text-red-500">*</span></label>
+                    <select name="icon" id="icon" class="form-select w-full @error('icon') border-red-500 @enderror" required>
                         <option value="wind" {{ old('icon') === 'wind' ? 'selected' : '' }}>🌀 Wind (Angin)</option>
                         <option value="snowflake" {{ old('icon') === 'snowflake' ? 'selected' : '' }}>❄️ Snowflake (Salju)</option>
                         <option value="wrench" {{ old('icon') === 'wrench' ? 'selected' : '' }}>🔧 Wrench (Obeng)</option>
@@ -61,8 +61,8 @@
                 </div>
                 
                 <div class="md:col-span-2">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="form-checkbox">
+                    <label for="is_active" class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="form-checkbox">
                         <span class="text-sm font-medium text-gray-700">Aktifkan layanan ini</span>
                     </label>
                 </div>
@@ -76,7 +76,8 @@
                 @for($i = 0; $i < 6; $i++)
                 <div class="flex items-center gap-2">
                     <i data-lucide="check-circle" class="w-5 h-5 text-success flex-shrink-0"></i>
-                    <input type="text" name="features[]" value="{{ old('features.' . $i) }}" class="form-input flex-1" placeholder="Contoh: Pengecekan kebocoran pipa">
+                    <label for="feature_{{ $i }}" class="sr-only">Fitur {{ $i + 1 }}</label>
+                    <input type="text" name="features[]" id="feature_{{ $i }}" value="{{ old('features.' . $i) }}" class="form-input flex-1" placeholder="Contoh: Pengecekan kebocoran pipa" aria-label="Fitur layanan {{ $i + 1 }}" autocomplete="off">
                 </div>
                 @endfor
             </div>
@@ -88,10 +89,10 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach($capacityLabels as $cap => $label)
                 <div class="bg-gray-50 rounded-lg p-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ $label }}</label>
+                    <label for="price_{{ $cap }}" class="block text-sm font-medium text-gray-700 mb-2">{{ $label }}</label>
                     <div class="relative">
                         <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm z-10 pointer-events-none">Rp</span>
-                        <input type="text" inputmode="numeric" name="prices[{{ $cap }}]" value="{{ old('prices.' . $cap, 0) }}" placeholder="0" class="form-input w-full !pl-12 @error('prices.' . $cap) border-red-500 @enderror">
+                        <input type="text" inputmode="numeric" name="prices[{{ $cap }}]" id="price_{{ $cap }}" value="{{ old('prices.' . $cap, 0) }}" placeholder="0" class="form-input w-full !pl-12 @error('prices.' . $cap) border-red-500 @enderror" autocomplete="off">
                     </div>
                 </div>
                 @endforeach

@@ -19,6 +19,7 @@
             icon="mail"
             placeholder="admin@acservice.com"
             :required="true"
+            autocomplete="email"
         />
 
         <div class="mb-4">
@@ -34,6 +35,7 @@
                     class="form-input form-input-icon pr-12"
                     placeholder="••••••••"
                     required
+                    autocomplete="current-password"
                 >
                 <button type="button" onclick="togglePassword()" class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer">
                     <i data-lucide="eye" id="eye-icon" class="w-5 h-5 text-gray-400 hover:text-primary transition-colors"></i>

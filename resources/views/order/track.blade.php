@@ -12,15 +12,18 @@
             <p class="text-gray-600 mb-6">Masukkan Kode Order atau Nomor WhatsApp Anda</p>
             
             <form action="{{ route('order.track') }}" method="GET" class="max-w-md mx-auto relative">
+                <label for="track-query" class="sr-only">Kode Order atau Nomor WhatsApp</label>
                 <input 
                     type="text" 
-                    name="query" 
+                    name="query"
+                    id="track-query"
                     value="{{ $query ?? '' }}"
                     placeholder="Contoh: AC123XYZ atau 0812345xxxxx" 
                     class="form-input pl-5 pr-12 py-3.5 text-lg"
+                    autocomplete="off"
                     required
                 >
-                <button type="submit" class="absolute right-2 top-2 p-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors">
+                <button type="submit" class="absolute right-2 top-2 p-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors" aria-label="Cari Order">
                     <i data-lucide="search" class="w-5 h-5"></i>
                 </button>
             </form>
@@ -105,6 +108,29 @@
                                 <p class="text-sm text-gray-600 italic">"{{ $order->review->comment }}"</p>
                                 @endif
                             </div>
+                            
+                            {{-- Google Maps Review CTA for satisfied customers (4-5 stars) --}}
+                            @if($order->review->rating >= 4 && !empty($settings['google_maps_url']))
+                            <div class="mt-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm flex-shrink-0">
+                                        <svg class="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium text-gray-800 mb-1">Puas dengan layanan kami? 🙏</p>
+                                        <p class="text-xs text-gray-600 mb-3">Bantu kami dengan memberi ulasan di Google Maps agar lebih banyak orang mengenal layanan kami.</p>
+                                        <a href="{{ $settings['google_maps_url'] }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-blue-200 rounded-lg text-sm font-medium text-blue-700 hover:bg-blue-50 transition-colors">
+                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27 3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10 5.35 0 9.25-3.67 9.25-9.09 0-1.15-.15-1.81-.15-1.81z"/>
+                                            </svg>
+                                            Beri Ulasan di Google
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                             @else
                             <a href="{{ route('order.rate.show', $order->order_code) }}" class="btn btn-primary w-full justify-center">
                                 <i data-lucide="star" class="w-5 h-5"></i>

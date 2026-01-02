@@ -17,11 +17,13 @@
     <x-cards.card>
         <form action="{{ route('admin.customers.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
             <div class="flex-1">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, telepon, atau email..." class="form-input">
+                <label for="search" class="sr-only">Cari Pelanggan</label>
+                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari nama, telepon, atau email..." class="form-input">
             </div>
             @if($cities->count() > 0)
             <div class="w-full md:w-40">
-                <select name="city" class="form-select w-full">
+                <label for="city" class="sr-only">Filter Kota</label>
+                <select name="city" id="city" class="form-select w-full">
                     <option value="">Semua Kota</option>
                     @foreach($cities as $city)
                     <option value="{{ $city }}" {{ request('city') === $city ? 'selected' : '' }}>{{ $city }}</option>

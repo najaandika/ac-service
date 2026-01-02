@@ -19,13 +19,42 @@
                         <i data-lucide="calendar" class="w-5 h-5"></i>
                         <span>Mulai Sekarang</span>
                     </a>
-                    @if(!empty($settings['whatsapp']))
-                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['whatsapp']) }}" class="btn btn-outline text-lg px-8 py-4 justify-center">
-                        <i data-lucide="message-circle" class="w-5 h-5"></i>
-                        <span>WhatsApp</span>
-                    </a>
-                    @endif
                 </div>
+                
+                {{-- Social Proof Stats --}}
+                @if(isset($stats) && $stats['completed_orders'] > 0)
+                <div class="flex flex-wrap items-center gap-6 mt-8 pt-6 border-t border-gray-200">
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 bg-success-light rounded-full flex items-center justify-center">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-success"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-foreground">{{ number_format($stats['completed_orders']) }}+</p>
+                            <p class="text-xs text-gray-500">Order Selesai</p>
+                        </div>
+                    </div>
+                    @if($stats['average_rating'] > 0)
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                            <i data-lucide="star" class="w-5 h-5 text-yellow-500 fill-yellow-500"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-foreground">{{ $stats['average_rating'] }}/5</p>
+                            <p class="text-xs text-gray-500">Rating ({{ $stats['total_reviews'] }} ulasan)</p>
+                        </div>
+                    </div>
+                    @endif
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-primary"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-foreground">30 Hari</p>
+                            <p class="text-xs text-gray-500">Garansi Layanan</p>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
             <div class="hidden lg:block fade-right">
                 <div class="relative">
@@ -180,14 +209,10 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-up">
         <h2 class="text-white text-3xl md:text-4xl font-extrabold mb-4">AC Bermasalah?</h2>
         <p class="text-white/80 text-lg mb-8">Hubungi kami sekarang dan dapatkan solusi terbaik untuk AC Anda</p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <div class="flex justify-center">
             <a href="/order" class="btn bg-white text-primary hover:bg-gray-100 text-lg px-8 py-4 justify-center">
                 <i data-lucide="calendar" class="w-5 h-5"></i>
-                <span>Order Online</span>
-            </a>
-            <a href="https://wa.me/6281234567890" class="btn border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-4 justify-center">
-                <i data-lucide="phone" class="w-5 h-5"></i>
-                <span>0812-3456-7890</span>
+                <span>Order Sekarang</span>
             </a>
         </div>
     </div>

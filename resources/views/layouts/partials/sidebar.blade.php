@@ -37,11 +37,9 @@
                     <div class="nav-item {{ request()->routeIs('admin.orders.*') ? 'nav-item-active' : 'nav-item-inactive' }}">
                         <i data-lucide="clipboard-list" class="w-5 h-5"></i>
                         <span>Order Service</span>
-                        @if($pendingOrderCount > 0)
-                        <span class="ml-auto w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                        <span data-pending-badge class="ml-auto w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center {{ $pendingOrderCount > 0 ? '' : 'hidden' }}">
                             {{ $pendingOrderCount > 9 ? '9+' : $pendingOrderCount }}
                         </span>
-                        @endif
                     </div>
                 </a>
                 <a href="{{ route('admin.reports.index') }}" class="block">

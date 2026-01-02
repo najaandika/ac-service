@@ -157,8 +157,8 @@
                     <div class="space-y-4">
                         <div class="space-y-2">
                             @foreach(['pending' => 'Pending', 'confirmed' => 'Dikonfirmasi', 'in_progress' => 'Dalam Proses', 'completed' => 'Selesai', 'cancelled' => 'Dibatalkan'] as $value => $label)
-                            <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:border-primary transition-colors {{ $order->status === $value ? 'border-primary bg-primary/5' : '' }}">
-                                <input type="radio" name="status" value="{{ $value }}" {{ $order->status === $value ? 'checked' : '' }} class="text-primary">
+                            <label for="status_{{ $value }}" class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:border-primary transition-colors {{ $order->status === $value ? 'border-primary bg-primary/5' : '' }}">
+                                <input type="radio" name="status" id="status_{{ $value }}" value="{{ $value }}" {{ $order->status === $value ? 'checked' : '' }} class="text-primary">
                                 <span class="font-medium">{{ $label }}</span>
                             </label>
                             @endforeach
@@ -195,7 +195,8 @@
                         </div>
                         @endif
                         
-                        <select name="technician_id" class="form-input">
+                        <label for="technician_id" class="sr-only">Pilih Teknisi</label>
+                        <select name="technician_id" id="technician_id" class="form-input">
                             <option value="">-- Pilih Teknisi --</option>
                             @foreach($technicians as $tech)
                             <option value="{{ $tech->id }}" {{ $order->technician_id == $tech->id ? 'selected' : '' }}>

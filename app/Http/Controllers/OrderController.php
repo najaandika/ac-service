@@ -35,7 +35,7 @@ class OrderController extends Controller
         $validated = $request->validate([
             'service_id' => 'required|exists:services,id',
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|string|max:20|regex:/^[0-9]+$/',
             'email' => 'nullable|email|max:255',
             'address' => 'required|string',
             'city' => 'nullable|string|max:100',
@@ -45,6 +45,18 @@ class OrderController extends Controller
             'scheduled_date' => 'required|date|after_or_equal:today',
             'scheduled_time' => 'required|in:pagi,siang,sore',
             'notes' => 'nullable|string|max:1000',
+        ], [
+            'service_id.required' => 'Silakan pilih layanan terlebih dahulu.',
+            'service_id.exists' => 'Layanan yang dipilih tidak valid.',
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'phone.required' => 'Nomor WhatsApp wajib diisi.',
+            'phone.regex' => 'Nomor WhatsApp hanya boleh berisi angka.',
+            'address.required' => 'Alamat wajib diisi.',
+            'ac_type.required' => 'Tipe AC wajib dipilih.',
+            'ac_capacity.required' => 'Kapasitas AC wajib dipilih.',
+            'scheduled_date.required' => 'Tanggal layanan wajib diisi.',
+            'scheduled_date.after_or_equal' => 'Tanggal layanan tidak boleh di masa lalu.',
+            'scheduled_time.required' => 'Waktu layanan wajib dipilih.',
         ]);
 
         try {

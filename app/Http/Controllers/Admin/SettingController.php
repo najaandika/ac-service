@@ -36,8 +36,11 @@ class SettingController extends Controller
             'whatsapp' => 'nullable|string|max:20',
             'instagram' => 'nullable|string|max:100',
             'tiktok' => 'nullable|string|max:255',
+            'google_maps_url' => 'nullable|url|max:500',
+            'notification_interval' => 'nullable|integer|min:10|max:120',
             'site_logo' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
             'hero_image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'notification_audio' => 'nullable|file|mimes:mp3,wav|max:1024',
         ]);
 
         // Handle logo upload
@@ -62,11 +65,26 @@ class SettingController extends Controller
             Setting::set('hero_image', $heroPath, 'image');
         }
 
+        // Handle notification audio upload
+        if ($request->hasFile('notification_audio')) {
+            // Delete old audio
+            $oldAudio = Setting::get('notification_audio');
+            if ($oldAudio) {
+                Storage::disk('public')->delete($oldAudio);
+            }
+            $audioPath = $request->file('notification_audio')->store('settings', 'public');
+            Setting::set('notification_audio', $audioPath, 'audio');
+        }
+
+        // Handle notification enabled checkbox
+        Setting::set('notification_enabled', $request->has('notification_enabled') ? '1' : '0', 'boolean');
+
         // Save text settings
         $textSettings = [
             'site_name', 'site_description', 'hero_title', 'hero_subtitle',
             'phone', 'email', 'address', 'operating_hours',
-            'whatsapp', 'instagram', 'tiktok'
+            'whatsapp', 'instagram', 'tiktok', 'google_maps_url',
+            'notification_interval'
         ];
 
         foreach ($textSettings as $key) {
@@ -81,3 +99,4 @@ class SettingController extends Controller
         return back()->with('success', 'Pengaturan berhasil disimpan!');
     }
 }
+

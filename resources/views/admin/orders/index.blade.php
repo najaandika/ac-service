@@ -17,12 +17,12 @@
     <x-cards.card>
         <form action="{{ route('admin.orders.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Cari</label>
-                <input type="text" name="search" value="{{ request('search') }}" class="form-input" placeholder="Kode order, nama, HP...">
+                <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari</label>
+                <input type="text" name="search" id="search" value="{{ request('search') }}" class="form-input" placeholder="Kode order, nama, HP..." autocomplete="off">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                <select name="status" class="form-input">
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select name="status" id="status" class="form-input">
                     <option value="all">Semua Status</option>
                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                     <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>Dikonfirmasi</option>
@@ -32,8 +32,8 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Dari Tanggal</label>
-                <input type="date" name="date_from" value="{{ request('date_from') }}" class="form-input">
+                <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">Dari Tanggal</label>
+                <input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}" class="form-input">
             </div>
             <div class="flex items-end gap-2">
                 <button type="submit" class="btn btn-primary flex-1">

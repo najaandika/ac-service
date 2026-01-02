@@ -97,8 +97,8 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tipe AC</label>
-                            <select name="ac_type" class="form-input">
+                            <label for="ac_type" class="block text-sm font-medium text-gray-700 mb-1">Tipe AC</label>
+                            <select name="ac_type" id="ac_type" class="form-input">
                                 <option value="split" {{ old('ac_type') == 'split' ? 'selected' : '' }}>AC Split (Dinding)</option>
                                 <option value="cassette" {{ old('ac_type') == 'cassette' ? 'selected' : '' }}>AC Cassette</option>
                                 <option value="standing" {{ old('ac_type') == 'standing' ? 'selected' : '' }}>AC Standing</option>
@@ -107,8 +107,8 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Keluhan (Opsional)</label>
-                            <input type="text" name="notes" value="{{ old('notes') }}" class="form-input" placeholder="Contoh: AC bocor air">
+                            <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Keluhan (Opsional)</label>
+                            <input type="text" name="notes" id="notes" value="{{ old('notes') }}" class="form-input" placeholder="Contoh: AC bocor air" autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -153,8 +153,8 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tipe AC</label>
-                            <select name="ac_type" class="form-input">
+                            <label for="ac_type_full" class="block text-sm font-medium text-gray-700 mb-1">Tipe AC</label>
+                            <select name="ac_type" id="ac_type_full" class="form-input">
                                 <option value="split" {{ old('ac_type') == 'split' ? 'selected' : '' }}>AC Split (Dinding)</option>
                                 <option value="cassette" {{ old('ac_type') == 'cassette' ? 'selected' : '' }}>AC Cassette</option>
                                 <option value="standing" {{ old('ac_type') == 'standing' ? 'selected' : '' }}>AC Standing</option>
@@ -163,8 +163,8 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Kapasitas (PK)</label>
-                            <select name="ac_capacity" class="form-input">
+                            <label for="ac_capacity" class="block text-sm font-medium text-gray-700 mb-1">Kapasitas (PK)</label>
+                            <select name="ac_capacity" id="ac_capacity" class="form-input">
                                 <option value="0.5pk" {{ old('ac_capacity', $selectedCapacity) == '0.5pk' ? 'selected' : '' }}>1/2 PK</option>
                                 <option value="0.75pk" {{ old('ac_capacity', $selectedCapacity) == '0.75pk' ? 'selected' : '' }}>3/4 PK</option>
                                 <option value="1pk" {{ old('ac_capacity', $selectedCapacity) == '1pk' ? 'selected' : '' }}>1 PK</option>
@@ -177,21 +177,21 @@
                     </div>
                     
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Unit</label>
+                        <label for="ac_quantity" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Unit</label>
                         <div class="flex items-center max-w-[150px]">
-                            <button type="button" onclick="decrementQuantity()" class="w-10 h-10 bg-gray-100 rounded-l-lg hover:bg-gray-200 flex items-center justify-center">
+                            <button type="button" onclick="decrementQuantity()" class="w-10 h-10 bg-gray-100 rounded-l-lg hover:bg-gray-200 flex items-center justify-center" aria-label="Kurangi jumlah">
                                 <i data-lucide="minus" class="w-4 h-4"></i>
                             </button>
                             <input type="number" name="ac_quantity" id="ac_quantity" value="{{ old('ac_quantity', $selectedQty) }}" min="1" max="10" class="w-full text-center border-y border-gray-200 py-2 focus:outline-none" readonly>
-                            <button type="button" onclick="incrementQuantity()" class="w-10 h-10 bg-gray-100 rounded-r-lg hover:bg-gray-200 flex items-center justify-center">
+                            <button type="button" onclick="incrementQuantity()" class="w-10 h-10 bg-gray-100 rounded-r-lg hover:bg-gray-200 flex items-center justify-center" aria-label="Tambah jumlah">
                                 <i data-lucide="plus" class="w-4 h-4"></i>
                             </button>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Keluhan / Catatan (Opsional)</label>
-                        <textarea name="notes" rows="2" class="form-input" placeholder="Contoh: AC bocor air, remote tidak berfungsi, dll">{{ old('notes') }}</textarea>
+                        <label for="notes_full" class="block text-sm font-medium text-gray-700 mb-1">Keluhan / Catatan (Opsional)</label>
+                        <textarea name="notes" id="notes_full" rows="2" class="form-input" placeholder="Contoh: AC bocor air, remote tidak berfungsi, dll">{{ old('notes') }}</textarea>
                     </div>
                 </div>
                 @endif
@@ -205,12 +205,12 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Layanan</label>
-                            <input type="date" name="scheduled_date" value="{{ old('scheduled_date', date('Y-m-d')) }}" min="{{ date('Y-m-d') }}" class="form-input">
+                            <label for="scheduled_date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Layanan</label>
+                            <input type="date" name="scheduled_date" id="scheduled_date" value="{{ old('scheduled_date', date('Y-m-d')) }}" min="{{ date('Y-m-d') }}" class="form-input">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Waktu</label>
-                            <select name="scheduled_time" class="form-input">
+                            <label for="scheduled_time" class="block text-sm font-medium text-gray-700 mb-1">Waktu</label>
+                            <select name="scheduled_time" id="scheduled_time" class="form-input">
                                 <option value="pagi" {{ old('scheduled_time') == 'pagi' ? 'selected' : '' }}>Pagi (08:00 - 12:00)</option>
                                 <option value="siang" {{ old('scheduled_time') == 'siang' ? 'selected' : '' }}>Siang (12:00 - 15:00)</option>
                                 <option value="sore" {{ old('scheduled_time') == 'sore' ? 'selected' : '' }}>Sore (15:00 - 18:00)</option>
@@ -220,26 +220,26 @@
 
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                            <input type="text" name="name" value="{{ old('name') }}" class="form-input" placeholder="Masukkan nama anda" required>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                            <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-input" placeholder="Masukkan nama anda" autocomplete="name" required>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Nomor WhatsApp</label>
-                                <input type="tel" name="phone" value="{{ old('phone') }}" class="form-input" placeholder="Contoh: 0812345xxxxx" required>
+                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Nomor WhatsApp</label>
+                                <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" class="form-input" placeholder="Contoh: 08123456789" pattern="[0-9]*" inputmode="numeric" autocomplete="tel" required>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Email (Opsional)</label>
-                                <input type="email" name="email" value="{{ old('email') }}" class="form-input" placeholder="email@contoh.com">
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email (Opsional)</label>
+                                <input type="email" name="email" id="email" value="{{ old('email') }}" class="form-input" placeholder="email@contoh.com" autocomplete="email">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
-                            <textarea name="address" rows="3" class="form-input" placeholder="Jalan, Nomor Rumah, RT/RW, Kelurahan, Kecamatan" required>{{ old('address') }}</textarea>
+                            <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
+                            <textarea name="address" id="address" rows="3" class="form-input" placeholder="Jalan, Nomor Rumah, RT/RW, Kelurahan, Kecamatan" autocomplete="street-address" required>{{ old('address') }}</textarea>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Kota / Area</label>
-                            <input type="text" name="city" value="{{ old('city') }}" class="form-input" placeholder="Contoh: Jakarta Selatan">
+                            <label for="city" class="block text-sm font-medium text-gray-700 mb-1">Kota / Area</label>
+                            <input type="text" name="city" id="city" value="{{ old('city') }}" class="form-input" placeholder="Contoh: Jakarta Selatan" autocomplete="address-level2">
                         </div>
                     </div>
                 </div>

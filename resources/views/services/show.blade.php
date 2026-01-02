@@ -116,11 +116,11 @@
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Jumlah Unit</label>
                         <div class="flex items-center justify-center">
-                            <button type="button" @click="decrementQty()" class="w-10 h-10 bg-gray-100 rounded-l-lg hover:bg-gray-200 flex items-center justify-center">
+                            <button type="button" @click="decrementQty()" class="w-10 h-10 bg-gray-100 rounded-l-lg hover:bg-gray-200 flex items-center justify-center" aria-label="Kurangi jumlah">
                                 <i data-lucide="minus" class="w-4 h-4"></i>
                             </button>
-                            <input type="text" x-model="quantity" class="w-16 text-center border-y border-gray-200 py-2 font-bold text-lg" readonly>
-                            <button type="button" @click="incrementQty()" class="w-10 h-10 bg-gray-100 rounded-r-lg hover:bg-gray-200 flex items-center justify-center">
+                            <input type="text" id="service-quantity" x-model="quantity" class="w-16 text-center border-y border-gray-200 py-2 font-bold text-lg" readonly aria-label="Jumlah unit AC">
+                            <button type="button" @click="incrementQty()" class="w-10 h-10 bg-gray-100 rounded-r-lg hover:bg-gray-200 flex items-center justify-center" aria-label="Tambah jumlah">
                                 <i data-lucide="plus" class="w-4 h-4"></i>
                             </button>
                         </div>
@@ -139,12 +139,14 @@
                     </a>
 
                     <div class="mt-4 pt-4 border-t border-gray-100 text-center">
-                        <a href="https://wa.me/6281234567890?text=Halo, saya mau tanya tentang layanan {{ $service->name }}" 
+                        @if(!empty($settings['whatsapp']))
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['whatsapp']) }}?text=Halo, saya mau tanya tentang layanan {{ $service->name }}" 
                            target="_blank"
                            class="text-sm text-gray-500 hover:text-primary inline-flex items-center gap-1">
                             <i data-lucide="message-circle" class="w-4 h-4"></i>
                             Tanya via WhatsApp
                         </a>
+                        @endif
                     </div>
 
                     <div class="mt-4 pt-4 border-t border-gray-100 space-y-2">

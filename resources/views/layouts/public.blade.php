@@ -30,6 +30,9 @@
 
 @include('layouts.partials.public.footer')
 
+{{-- Floating WhatsApp Button --}}
+<x-floating-whatsapp :settings="$settings ?? []" />
+
 @push('scripts')
     @vite('resources/js/layouts/public.js')
 @endpush

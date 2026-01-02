@@ -14,6 +14,7 @@ import { openModal, closeModal } from './modules/modal';
 import { togglePassword } from './modules/forms';
 import { initDashboardCharts } from './modules/charts';
 import './scroll-animation';
+import './modules/order-notification';
 
 // Register Alpine components
 Alpine.data('quickOrder', (config) => ({

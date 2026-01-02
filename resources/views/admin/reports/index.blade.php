@@ -17,12 +17,12 @@
     <x-cards.card>
         <form action="{{ route('admin.reports.index') }}" method="GET" class="space-y-4 md:space-y-0 md:flex md:gap-4 md:items-end">
             <div class="w-full md:flex-1">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Dari Tanggal</label>
-                <input type="date" name="start_date" value="{{ $startDate }}" class="form-input w-full">
+                <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Dari Tanggal</label>
+                <input type="date" name="start_date" id="start_date" value="{{ $startDate }}" class="form-input w-full">
             </div>
             <div class="w-full md:flex-1">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Sampai Tanggal</label>
-                <input type="date" name="end_date" value="{{ $endDate }}" class="form-input w-full">
+                <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1">Sampai Tanggal</label>
+                <input type="date" name="end_date" id="end_date" value="{{ $endDate }}" class="form-input w-full">
             </div>
             <div class="flex gap-2 w-full md:w-auto">
                 <button type="submit" class="btn btn-primary flex-1 md:flex-none justify-center">

@@ -40,10 +40,12 @@
     <x-cards.card>
         <form action="{{ route('admin.technicians.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
             <div class="flex-1">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau telepon..." class="form-input">
+                <label for="search" class="sr-only">Cari Teknisi</label>
+                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari nama atau telepon..." class="form-input">
             </div>
             <div class="w-full md:w-40">
-                <select name="status" class="form-select w-full">
+                <label for="status" class="sr-only">Filter Status</label>
+                <select name="status" id="status" class="form-select w-full">
                     <option value="">Semua Status</option>
                     <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Aktif</option>
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Nonaktif</option>

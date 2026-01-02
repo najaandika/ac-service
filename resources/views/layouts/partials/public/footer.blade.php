@@ -21,10 +21,11 @@
             <div>
                 <h4 class="text-white font-semibold mb-4">Layanan</h4>
                 <ul class="space-y-2 text-gray-300">
-                    <li><a href="/layanan/cuci-ac" class="hover:text-primary">Cuci AC</a></li>
-                    <li><a href="/layanan/isi-freon" class="hover:text-primary">Isi Freon</a></li>
-                    <li><a href="/layanan/perbaikan-ac" class="hover:text-primary">Perbaikan</a></li>
-                    <li><a href="/layanan/instalasi-ac" class="hover:text-primary">Instalasi</a></li>
+                    @forelse($footerServices ?? [] as $service)
+                    <li><a href="/layanan/{{ $service->slug }}" class="hover:text-primary">{{ $service->name }}</a></li>
+                    @empty
+                    <li><a href="/#layanan" class="hover:text-primary">Lihat Layanan</a></li>
+                    @endforelse
                 </ul>
             </div>
             
@@ -34,13 +35,7 @@
                     @if(!empty($settings['phone']))
                     <li class="flex items-center gap-2">
                         <i data-lucide="phone" class="w-4 h-4"></i>
-                        <span>{{ $settings['phone'] }}</span>
-                    </li>
-                    @endif
-                    @if(!empty($settings['whatsapp']))
-                    <li class="flex items-center gap-2">
-                        <i data-lucide="message-circle" class="w-4 h-4"></i>
-                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['whatsapp']) }}" class="hover:text-primary">WhatsApp</a>
+                        <a href="tel:{{ preg_replace('/[^0-9+]/', '', $settings['phone']) }}" class="hover:text-primary">{{ $settings['phone'] }}</a>
                     </li>
                     @endif
                     @if(!empty($settings['email']))
