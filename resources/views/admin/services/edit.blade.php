@@ -6,12 +6,7 @@
 @section('content')
 <div class="space-y-6">
     <!-- Page Header -->
-    <x-cards.card>
-        <div>
-            <h1 class="text-foreground text-2xl font-bold hidden lg:block">Edit: {{ $service->name }}</h1>
-            <p class="text-gray-600">Update informasi layanan</p>
-        </div>
-    </x-cards.card>
+    <x-page-header :title="'Edit: ' . $service->name" subtitle="Update informasi layanan" />
 
     <form action="{{ route('admin.services.update', $service) }}" method="POST" class="space-y-6">
         @csrf
@@ -21,45 +16,52 @@
         <x-cards.card title="Informasi Dasar">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="md:col-span-2">
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Layanan <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" id="name" value="{{ old('name', $service->name) }}" class="form-input w-full @error('name') border-red-500 @enderror" placeholder="Contoh: Cuci AC" required>
-                    @error('name')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                    <x-forms.input 
+                        name="name" 
+                        label="Nama Layanan" 
+                        placeholder="Contoh: Cuci AC"
+                        :value="$service->name"
+                        :required="true"
+                    />
                 </div>
                 
                 <div class="md:col-span-2">
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi <span class="text-red-500">*</span></label>
-                    <textarea name="description" id="description" rows="3" class="form-input w-full @error('description') border-red-500 @enderror" placeholder="Jelaskan layanan ini..." required>{{ old('description', $service->description) }}</textarea>
-                    @error('description')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                    <x-forms.textarea 
+                        name="description" 
+                        label="Deskripsi" 
+                        placeholder="Jelaskan layanan ini..."
+                        :value="$service->description"
+                        :rows="3"
+                        :required="true"
+                    />
                 </div>
                 
-                <div>
-                    <label for="duration_minutes" class="block text-sm font-medium text-gray-700 mb-1">Durasi (menit) <span class="text-red-500">*</span></label>
-                    <input type="number" name="duration_minutes" id="duration_minutes" value="{{ old('duration_minutes', $service->duration_minutes) }}" min="15" class="form-input w-full @error('duration_minutes') border-red-500 @enderror" required>
-                    @error('duration_minutes')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                <x-forms.input 
+                    name="duration_minutes" 
+                    type="number"
+                    label="Durasi (menit)" 
+                    :value="$service->duration_minutes"
+                    :required="true"
+                    min="15"
+                />
                 
-                <div>
-                    <label for="icon" class="block text-sm font-medium text-gray-700 mb-1">Icon <span class="text-red-500">*</span></label>
-                    <select name="icon" id="icon" class="form-select w-full @error('icon') border-red-500 @enderror" required>
-                        <option value="wind" {{ old('icon', $service->icon) === 'wind' ? 'selected' : '' }}>🌀 Wind (Angin)</option>
-                        <option value="snowflake" {{ old('icon', $service->icon) === 'snowflake' ? 'selected' : '' }}>❄️ Snowflake (Salju)</option>
-                        <option value="wrench" {{ old('icon', $service->icon) === 'wrench' ? 'selected' : '' }}>🔧 Wrench (Obeng)</option>
-                        <option value="thermometer" {{ old('icon', $service->icon) === 'thermometer' ? 'selected' : '' }}>🌡️ Thermometer</option>
-                        <option value="settings" {{ old('icon', $service->icon) === 'settings' ? 'selected' : '' }}>⚙️ Settings (Gear)</option>
-                        <option value="zap" {{ old('icon', $service->icon) === 'zap' ? 'selected' : '' }}>⚡ Zap (Listrik)</option>
-                        <option value="droplets" {{ old('icon', $service->icon) === 'droplets' ? 'selected' : '' }}>💧 Droplets (Tetes)</option>
-                        <option value="fan" {{ old('icon', $service->icon) === 'fan' ? 'selected' : '' }}>🌪️ Fan (Kipas)</option>
-                    </select>
-                    @error('icon')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                <x-forms.select 
+                    name="icon" 
+                    label="Icon" 
+                    :required="true"
+                    :selected="$service->icon"
+                    :options="[
+                        'wind' => '🌀 Wind (Angin)',
+                        'snowflake' => '❄️ Snowflake (Salju)',
+                        'wrench' => '🔧 Wrench (Obeng)',
+                        'thermometer' => '🌡️ Thermometer',
+                        'settings' => '⚙️ Settings (Gear)',
+                        'zap' => '⚡ Zap (Listrik)',
+                        'droplets' => '💧 Droplets (Tetes)',
+                        'fan' => '🌪️ Fan (Kipas)',
+                    ]"
+                    placeholder="Pilih icon..."
+                />
                 
                 <div class="md:col-span-2">
                     <label for="is_active" class="flex items-center gap-2 cursor-pointer">
@@ -94,11 +96,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach($capacityLabels as $cap => $label)
                 <div class="bg-gray-50 rounded-lg p-4">
-                    <label for="price_{{ $cap }}" class="block text-sm font-medium text-gray-700 mb-2">{{ $label }}</label>
-                    <div class="relative">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm z-10 pointer-events-none">Rp</span>
-                        <input type="text" inputmode="numeric" name="prices[{{ $cap }}]" id="price_{{ $cap }}" value="{{ old('prices.' . $cap, number_format($priceMap[$cap] ?? 0, 0, ',', '.')) }}" placeholder="0" class="form-input w-full !pl-12 @error('prices.' . $cap) border-red-500 @enderror">
-                    </div>
+                    <x-forms.currency-input 
+                        name="prices[{{ $cap }}]" 
+                        :label="$label"
+                        :value="$priceMap[$cap] ?? 0"
+                    />
                 </div>
                 @endforeach
             </div>
@@ -108,17 +110,10 @@
         </x-cards.card>
 
         <!-- Actions -->
-        <div class="flex items-center justify-end gap-3">
-            <a href="{{ route('admin.services.index') }}" class="btn btn-outline">Batal</a>
-            <button type="submit" class="btn btn-primary">
-                <i data-lucide="save" class="w-4 h-4"></i>
-                Update Layanan
-            </button>
-        </div>
+        <x-forms.form-actions 
+            cancelUrl="{{ route('admin.services.index') }}" 
+            submitText="Update Layanan" 
+        />
     </form>
 </div>
 @endsection
-
-@push('scripts')
-    @vite('resources/js/utils/price-formatter.js')
-@endpush

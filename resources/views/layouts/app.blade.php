@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'AC Service') - Dashboard</title>
     <meta name="description" content="AC Service dashboard for managing service orders, technicians, and customer data.">
+
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,52 +70,6 @@
         @yield('content')
     </main>
 </div>
-
-<script>
-// Check if notification already activated
-document.addEventListener('DOMContentLoaded', function() {
-    if (!localStorage.getItem('notifActivated') && document.body.classList.contains('admin-panel')) {
-        document.getElementById('notif-activation-banner')?.classList.remove('hidden');
-    }
-});
-
-function activateNotification() {
-    // Use AudioContext to unlock audio - more reliable
-    try {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        gainNode.gain.value = 0.1; // Low volume
-        oscillator.frequency.value = 800;
-        oscillator.type = 'sine';
-        
-        oscillator.start();
-        setTimeout(() => {
-            oscillator.stop();
-            audioContext.close();
-        }, 100);
-        
-        localStorage.setItem('notifActivated', 'true');
-        document.getElementById('notif-activation-banner')?.classList.add('hidden');
-        
-        // Show toast instead of alert
-        const toast = document.createElement('div');
-        toast.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2';
-        toast.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Notifikasi suara aktif!';
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-        
-    } catch (err) {
-        console.error('Audio activation failed:', err);
-        // Still mark as activated since user interacted
-        localStorage.setItem('notifActivated', 'true');
-        document.getElementById('notif-activation-banner')?.classList.add('hidden');
-    }
-}
-</script>
 
 @stack('scripts')
 </body>

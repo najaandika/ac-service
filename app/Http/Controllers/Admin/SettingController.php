@@ -33,6 +33,9 @@ class SettingController extends Controller
             'email' => 'nullable|email|max:255',
             'address' => 'nullable|string',
             'operating_hours' => 'nullable|string|max:255',
+            'service_areas' => 'nullable|string|max:500',
+            'time_slots' => 'nullable|string|max:500',
+            'address_maps_url' => 'nullable|url|max:500',
             'whatsapp' => 'nullable|string|max:20',
             'instagram' => 'nullable|string|max:100',
             'tiktok' => 'nullable|string|max:255',
@@ -82,7 +85,7 @@ class SettingController extends Controller
         // Save text settings
         $textSettings = [
             'site_name', 'site_description', 'hero_title', 'hero_subtitle',
-            'phone', 'email', 'address', 'operating_hours',
+            'phone', 'email', 'address', 'operating_hours', 'service_areas', 'time_slots', 'address_maps_url',
             'whatsapp', 'instagram', 'tiktok', 'google_maps_url',
             'notification_interval'
         ];
@@ -96,7 +99,8 @@ class SettingController extends Controller
 
         Setting::clearCache();
 
-        return back()->with('success', 'Pengaturan berhasil disimpan!');
+        $activeTab = $request->get('active_tab', 'profile');
+        return redirect()->route('admin.settings.index', ['tab' => $activeTab])->with('success', 'Pengaturan berhasil disimpan!');
     }
 }
 

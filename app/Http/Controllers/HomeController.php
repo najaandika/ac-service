@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Portfolio;
+use App\Models\Promo;
 use App\Models\Review;
 use App\Models\Service;
 use Illuminate\Http\Request;
@@ -27,6 +29,28 @@ class HomeController extends Controller
             'total_reviews' => Review::count(),
         ];
         
-        return view('home', compact('services', 'latestReviews', 'stats'));
+        // Get active promos for banner (max 3, public only)
+        $activePromos = Promo::where('is_active', true)
+            ->where(function ($q) {
+                $q->whereNull('start_date')->orWhere('start_date', '<=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('end_date')->orWhere('end_date', '>=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('usage_limit')->orWhereColumn('usage_count', '<', 'usage_limit');
+            })
+            ->orderBy('created_at', 'desc')
+            ->limit(3)
+            ->get();
+        
+        // Get latest 4 published portfolios for gallery preview
+        $portfolios = Portfolio::with('service')
+            ->published()
+            ->ordered()
+            ->limit(4)
+            ->get();
+        
+        return view('home', compact('services', 'latestReviews', 'stats', 'activePromos', 'portfolios'));
     }
 }

@@ -60,30 +60,56 @@ class OrdersExport
                 'Kode Order',
                 'Nama Customer',
                 'Telepon',
+                'Alamat',
                 'Layanan',
                 'Kapasitas',
                 'Jumlah Unit',
                 'Status',
                 'Teknisi',
                 'Tanggal',
+                'Harga Layanan',
+                'Promo',
+                'Diskon',
                 'Total (Rp)',
             ]);
 
             // Data
+            $totalRevenue = 0;
+            $totalDiscount = 0;
             foreach ($orders as $order) {
+                $totalRevenue += $order->total_price;
+                $totalDiscount += $order->discount ?? 0;
+                
                 fputcsv($file, [
                     $order->order_code,
                     $order->customer->name,
                     $order->customer->phone,
+                    $order->customer->address ?? '-',
                     $order->service->name,
                     strtoupper($order->ac_capacity),
                     $order->ac_quantity,
                     $order->status_label,
                     $order->technician?->name ?? '-',
                     $order->scheduled_date->format('d/m/Y'),
+                    $order->service_price,
+                    $order->promo_code ?? '-',
+                    $order->discount ?? 0,
                     $order->total_price,
                 ]);
             }
+
+            // Empty row as separator
+            fputcsv($file, []);
+            
+            // Summary row
+            $orderCount = $orders->count();
+            $avgOrderValue = $orderCount > 0 ? $totalRevenue / $orderCount : 0;
+            
+            fputcsv($file, ['RINGKASAN']);
+            fputcsv($file, ['Total Order:', $orderCount]);
+            fputcsv($file, ['Total Pendapatan:', 'Rp ' . number_format($totalRevenue, 0, ',', '.')]);
+            fputcsv($file, ['Total Diskon:', 'Rp ' . number_format($totalDiscount, 0, ',', '.')]);
+            fputcsv($file, ['Rata-rata per Order:', 'Rp ' . number_format($avgOrderValue, 0, ',', '.')]);
 
             fclose($file);
         };

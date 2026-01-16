@@ -48,8 +48,8 @@
 
         <!-- Remember & Forgot -->
         <div class="flex items-center justify-between mb-6">
-            <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" name="remember" class="w-4 h-4 text-primary border-border rounded focus:ring-primary">
+            <label class="flex items-center gap-2 cursor-pointer" for="remember">
+                <input type="checkbox" name="remember" id="remember" class="w-4 h-4 text-primary border-border rounded focus:ring-primary">
                 <span class="text-gray-600 text-sm">Ingat saya</span>
             </label>
             <a href="#" class="text-primary text-sm font-medium hover:underline">Lupa password?</a>

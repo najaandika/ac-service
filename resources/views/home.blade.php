@@ -2,6 +2,8 @@
 
 @section('title', 'AC Service - Jasa Service AC Profesional')
 
+@section('description', 'Jasa service AC profesional dan terpercaya. Cuci AC, isi freon, perbaikan, bongkar pasang dengan teknisi berpengalaman. Garansi layanan, harga transparan. Hubungi sekarang!')
+
 @section('content')
 <!-- Hero Section -->
 <section class="bg-gradient-to-br from-primary/10 via-white to-accent-teal/10 py-20 md:py-32">
@@ -53,6 +55,21 @@
                             <p class="text-xs text-gray-500">Garansi Layanan</p>
                         </div>
                     </div>
+                    {{-- Google Maps Badge --}}
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-gray-100">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335"/>
+                                <circle cx="12" cy="9" r="2.5" fill="#fff"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-bold text-foreground flex items-center gap-1">
+                                5.0 <i data-lucide="star" class="w-3 h-3 text-yellow-500 fill-yellow-500"></i>
+                            </p>
+                            <p class="text-xs text-gray-500">Google Maps (3)</p>
+                        </div>
+                    </div>
                 </div>
                 @endif
             </div>
@@ -70,6 +87,9 @@
         </div>
     </div>
 </section>
+
+<!-- Promo Banner -->
+<x-promo-banner :promos="$activePromos ?? collect([])" />
 
 <!-- Layanan Section -->
 <section id="layanan" class="py-16 md:py-24 bg-muted">
@@ -126,6 +146,37 @@
     </div>
 </section>
 
+<!-- Area Layanan Section -->
+@if(!empty($settings['service_areas']))
+<section id="area-layanan" class="py-16 md:py-24 bg-gradient-to-br from-primary/5 to-accent-teal/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center fade-up">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+                <i data-lucide="map-pin" class="w-8 h-8 text-primary"></i>
+            </div>
+            <h2 class="text-foreground text-3xl md:text-4xl font-bold mb-4">Area Layanan Kami</h2>
+            <p class="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
+                Kami melayani service AC di berbagai wilayah berikut
+            </p>
+        </div>
+        
+        <div class="flex flex-wrap justify-center gap-3 fade-up delay-200">
+            @foreach(explode(',', $settings['service_areas']) as $area)
+                <span class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium text-foreground shadow-sm hover:shadow-md hover:border-primary/30 transition-all">
+                    <i data-lucide="check" class="w-4 h-4 text-success"></i>
+                    {{ trim($area) }}
+                </span>
+            @endforeach
+        </div>
+        
+        <p class="text-center text-gray-500 text-sm mt-6 fade-up delay-300">
+            <i data-lucide="info" class="w-4 h-4 inline-block mr-1"></i>
+            Area tidak terdaftar? Silakan hubungi kami untuk konfirmasi ketersediaan.
+        </p>
+    </div>
+</section>
+@endif
+
 <!-- Testimoni Section -->
 @if(isset($latestReviews) && $latestReviews->count() > 0)
 <section id="testimoni" class="py-16 md:py-24 bg-muted">
@@ -158,7 +209,7 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="font-medium text-foreground truncate">{{ $review->order->customer->name ?? 'Customer' }}</p>
-                        <p class="text-xs text-gray-500">{{ $review->order->service->name ?? 'Layanan' }}</p>
+                        <p class="text-xs text-gray-500">{{ $review->created_at->diffForHumans() }}</p>
                     </div>
                 </div>
             </div>
@@ -169,6 +220,61 @@
             <a href="{{ route('testimoni.index') }}" class="btn btn-outline">
                 <i data-lucide="message-square" class="w-5 h-5"></i>
                 Lihat Semua Testimoni
+            </a>
+        </div>
+    </div>
+</section>
+@endif
+
+<!-- Gallery Preview Section -->
+@if(isset($portfolios) && $portfolios->count() > 0)
+<section id="gallery" class="py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <x-home.section-heading 
+            title="Hasil Kerja Kami" 
+            subtitle="Lihat transformasi AC sebelum dan sesudah ditangani tim profesional kami"
+            class="fade-up"
+        />
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 fade-up delay-200">
+            @foreach($portfolios as $portfolio)
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden group hover:shadow-lg transition-all duration-300" 
+                 x-data="{ showAfter: false }">
+                <!-- Before/After Toggle -->
+                <div class="relative aspect-[4/3] overflow-hidden">
+                    <img src="{{ asset('storage/' . $portfolio->before_image) }}" 
+                         alt="Before" 
+                         class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+                         :class="showAfter ? 'opacity-0' : 'opacity-100'">
+                    <img src="{{ asset('storage/' . $portfolio->after_image) }}" 
+                         alt="After" 
+                         class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+                         :class="showAfter ? 'opacity-100' : 'opacity-0'">
+                    
+                    <span class="absolute top-2 left-2 px-2 py-1 rounded text-xs font-bold shadow"
+                          :class="showAfter ? 'bg-green-500 text-white' : 'bg-red-500 text-white'"
+                          x-text="showAfter ? 'AFTER' : 'BEFORE'"></span>
+                    
+                    <button @click="showAfter = !showAfter"
+                            class="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm text-gray-700 p-2 rounded-full shadow-lg hover:bg-white transition-colors">
+                        <i data-lucide="repeat" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                
+                <div class="p-3">
+                    <h3 class="font-medium text-foreground text-sm truncate">{{ $portfolio->title }}</h3>
+                    @if($portfolio->service)
+                    <span class="text-xs text-gray-500">{{ $portfolio->service->name }}</span>
+                    @endif
+                </div>
+            </div>
+            @endforeach
+        </div>
+        
+        <div class="text-center mt-8 fade-up delay-300">
+            <a href="{{ route('gallery') }}" class="btn btn-outline">
+                <i data-lucide="images" class="w-5 h-5"></i>
+                Lihat Semua Gallery
             </a>
         </div>
     </div>
@@ -217,4 +323,48 @@
         </div>
     </div>
 </section>
+
+@push('head')
+{{-- JSON-LD Structured Data for LocalBusiness --}}
+@php
+$jsonLd = [
+    '@context' => 'https://schema.org',
+    '@type' => 'LocalBusiness',
+    'name' => $settings['site_name'] ?? 'AC Service',
+    'description' => $settings['site_description'] ?? 'Jasa service AC profesional',
+    'url' => url('/'),
+    'priceRange' => 'Rp 50.000 - Rp 500.000',
+    'openingHoursSpecification' => [
+        '@type' => 'OpeningHoursSpecification',
+        'dayOfWeek' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        'opens' => '08:00',
+        'closes' => '21:00',
+    ],
+];
+
+if (!empty($settings['site_logo'])) {
+    $jsonLd['image'] = asset('storage/' . $settings['site_logo']);
+}
+if (!empty($settings['phone'])) {
+    $jsonLd['telephone'] = $settings['phone'];
+}
+if (!empty($settings['email'])) {
+    $jsonLd['email'] = $settings['email'];
+}
+if (!empty($settings['address'])) {
+    $jsonLd['address'] = [
+        '@type' => 'PostalAddress',
+        'streetAddress' => $settings['address'],
+    ];
+}
+if (isset($stats) && $stats['average_rating'] > 0) {
+    $jsonLd['aggregateRating'] = [
+        '@type' => 'AggregateRating',
+        'ratingValue' => $stats['average_rating'],
+        'reviewCount' => $stats['total_reviews'],
+    ];
+}
+@endphp
+<script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}</script>
+@endpush
 @endsection

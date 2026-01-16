@@ -47,7 +47,14 @@
                     @if(!empty($settings['address']))
                     <li class="flex items-start gap-2">
                         <i data-lucide="map-pin" class="w-4 h-4 mt-0.5"></i>
+                        @if(!empty($settings['address_maps_url']))
+                        <a href="{{ $settings['address_maps_url'] }}" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors">
+                            {{ $settings['address'] }}
+                            <i data-lucide="external-link" class="w-3 h-3 inline-block ml-1 opacity-50"></i>
+                        </a>
+                        @else
                         <span>{{ $settings['address'] }}</span>
+                        @endif
                     </li>
                     @endif
                 </ul>

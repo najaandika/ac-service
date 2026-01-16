@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Service extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'name',
         'slug',
@@ -58,9 +60,10 @@ class Service extends Model
         return \App\Helpers\FormatHelper::rupiah($this->price);
     }
 
-    public function getPriceForCapacity(string $capacity): ?ServicePrice
+    public function getPriceForCapacity(string $capacity): float
     {
-        return $this->prices()->where('capacity', $capacity)->first();
+        $priceRecord = $this->prices()->where('capacity', $capacity)->first();
+        return $priceRecord ? (float) $priceRecord->price : (float) $this->price;
     }
 
     public function getStartingPriceAttribute(): string

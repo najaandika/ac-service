@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 
@@ -49,17 +51,9 @@ class CustomerController extends Controller
     /**
      * Store a newly created customer.
      */
-    public function store(Request $request)
+    public function store(StoreCustomerRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => 'nullable|email|max:255',
-            'address' => 'required|string',
-            'city' => 'nullable|string|max:100',
-        ]);
-        
-        Customer::create($validated);
+        Customer::create($request->validated());
         
         return redirect()
             ->route('admin.customers.index')
@@ -89,17 +83,9 @@ class CustomerController extends Controller
     /**
      * Update the specified customer.
      */
-    public function update(Request $request, Customer $customer)
+    public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => 'nullable|email|max:255',
-            'address' => 'required|string',
-            'city' => 'nullable|string|max:100',
-        ]);
-        
-        $customer->update($validated);
+        $customer->update($request->validated());
         
         return redirect()
             ->route('admin.customers.index')

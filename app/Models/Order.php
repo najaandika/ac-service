@@ -23,13 +23,17 @@ class Order extends Model
         'service_price',
         'additional_fee',
         'discount',
+        'promo_id',
+        'promo_code',
         'total_price',
         'status',
+        'departed_at',
         'completed_at',
     ];
 
     protected $casts = [
         'scheduled_date' => 'date',
+        'departed_at' => 'datetime',
         'completed_at' => 'datetime',
         'service_price' => 'decimal:2',
         'additional_fee' => 'decimal:2',
@@ -72,6 +76,11 @@ class Order extends Model
         return $this->belongsTo(Technician::class);
     }
 
+    public function promo(): BelongsTo
+    {
+        return $this->belongsTo(Promo::class);
+    }
+
     public function getFormattedTotalAttribute(): string
     {
         return \App\Helpers\FormatHelper::rupiah($this->total_price);
@@ -105,11 +114,12 @@ class Order extends Model
 
     public function getScheduledTimeSlotAttribute(): string
     {
+        // Support both old format (pagi/siang/sore) and new format (HH:00)
         return match($this->scheduled_time) {
             'pagi' => '08:00 - 12:00',
             'siang' => '12:00 - 15:00',
             'sore' => '15:00 - 18:00',
-            default => $this->scheduled_time,
+            default => $this->scheduled_time, // Already in HH:00 format
         };
     }
 

@@ -3,11 +3,13 @@
  */
 
 /* Card Component */
-.card {
+.card,
+.stat-card {
     @apply bg-muted rounded-[var(--radius-card)] pt-5 px-3 pb-3;
 }
 
-.card-inner {
+.card-inner,
+.stat-card-inner {
     @apply bg-white rounded-[var(--radius-card)] p-5;
 }
 
@@ -34,15 +36,6 @@
 
 .btn-warning {
     @apply bg-amber-500 text-white hover:bg-amber-600;
-}
-
-/* Stat Card */
-.stat-card {
-    @apply bg-muted rounded-[var(--radius-card)] pt-5 px-3 pb-3;
-}
-
-.stat-card-inner {
-    @apply bg-white rounded-[var(--radius-card)] p-5;
 }
 
 .stat-value {
@@ -101,7 +94,7 @@
 }
 
 .nav-item-active {
-    @apply bg-primary text-white;
+    @apply bg-primary/10 text-primary font-semibold border-l-4 border-primary;
 }
 
 .nav-item-inactive {

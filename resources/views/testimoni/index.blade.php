@@ -2,6 +2,8 @@
 
 @section('title', 'Testimoni Pelanggan - AC Service')
 
+@section('description', 'Lihat testimoni dan review pelanggan AC Service. Rating ' . ($stats['average'] ?? '5') . ' bintang dari ' . ($stats['total'] ?? '0') . ' pelanggan. Bukti nyata kualitas layanan kami.')
+
 @section('content')
 <!-- Hero Section -->
 <section class="bg-gradient-to-br from-primary/10 via-white to-accent-teal/10 py-16">
@@ -95,4 +97,23 @@
         </a>
     </div>
 </section>
+
+<!-- AggregateRating Schema for SEO -->
+@if($stats['total'] > 0)
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'LocalBusiness',
+    'name' => $settings['company_name'] ?? 'AC Service',
+    'aggregateRating' => [
+        '@type' => 'AggregateRating',
+        'ratingValue' => $stats['average'],
+        'reviewCount' => $stats['total'],
+        'bestRating' => '5',
+        'worstRating' => '1',
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endif
 @endsection
+

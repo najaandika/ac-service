@@ -213,9 +213,44 @@
                 </form>
             </x-cards.card>
 
+            <!-- Technician Departure -->
+            @if($order->technician && !$order->departed_at && !in_array($order->status, ['completed', 'cancelled']))
+            <x-cards.card title="Keberangkatan Teknisi">
+                <form action="{{ route('admin.orders.departed', $order) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="btn w-full justify-center bg-blue-500 hover:bg-blue-600 text-white border-0">
+                        <i data-lucide="navigation" class="w-4 h-4"></i>
+                        Teknisi Berangkat
+                    </button>
+                    <p class="text-xs text-gray-500 text-center mt-2">Klik saat teknisi berangkat ke lokasi</p>
+                </form>
+            </x-cards.card>
+            @endif
+
+            @if($order->departed_at)
+            <x-cards.card title="Status Perjalanan">
+                <div class="text-center py-2">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                        <i data-lucide="truck" class="w-4 h-4"></i>
+                        Teknisi Dalam Perjalanan
+                    </div>
+                    <p class="text-gray-600 mt-2">Berangkat: <strong>{{ $order->departed_at->format('H:i') }}</strong></p>
+                </div>
+            </x-cards.card>
+            @endif
+
             <!-- Quick Actions -->
             <x-cards.card title="Aksi Cepat">
                 <div class="space-y-3">
+                    {{-- Reminder H-1 Button --}}
+                    <a href="{{ $reminderUrl }}" 
+                       target="_blank"
+                       class="btn w-full justify-center bg-amber-500 hover:bg-amber-600 text-white border-0">
+                        <i data-lucide="bell" class="w-4 h-4"></i>
+                        Kirim Reminder H-1
+                    </a>
+                    
                     <a href="https://wa.me/{{ preg_replace('/^0/', '62', $order->customer->phone) }}?text=Halo {{ $order->customer->name }}, order AC Service Anda dengan kode *{{ $order->order_code }}* sedang kami proses." 
                        target="_blank"
                        class="btn btn-outline w-full justify-center">

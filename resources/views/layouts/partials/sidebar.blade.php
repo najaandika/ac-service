@@ -10,9 +10,9 @@
                     <i data-lucide="wind" class="w-7 h-7 text-white"></i>
                 </div>
                 @endif
-                <div>
-                    <h1 class="text-foreground text-lg font-bold">{{ $settings['site_name'] ?? 'AC Service' }}</h1>
-                    <p class="text-foreground text-xs font-normal">Admin Panel</p>
+                <div class="min-w-0 flex-1">
+                    <h1 class="text-foreground text-sm font-bold leading-tight line-clamp-2">{{ $settings['site_name'] ?? 'AC Service' }}</h1>
+                    <p class="text-gray-500 text-xs">Admin Panel</p>
                 </div>
             </div>
             <button onclick="toggleSidebar()" aria-label="Close sidebar" class="lg:hidden p-2 rounded-lg hover:bg-gray-200 cursor-pointer transition-all duration-200">
@@ -71,6 +71,18 @@
                     <div class="nav-item {{ request()->routeIs('admin.customers.*') ? 'nav-item-active' : 'nav-item-inactive' }}">
                         <i data-lucide="users" class="w-5 h-5"></i>
                         <span>Pelanggan</span>
+                    </div>
+                </a>
+                <a href="{{ route('admin.promos.index') }}" class="block">
+                    <div class="nav-item {{ request()->routeIs('admin.promos.*') ? 'nav-item-active' : 'nav-item-inactive' }}">
+                        <i data-lucide="ticket-percent" class="w-5 h-5"></i>
+                        <span>Promo</span>
+                    </div>
+                </a>
+                <a href="{{ route('admin.portfolios.index') }}" class="block">
+                    <div class="nav-item {{ request()->routeIs('admin.portfolios.*') ? 'nav-item-active' : 'nav-item-inactive' }}">
+                        <i data-lucide="images" class="w-5 h-5"></i>
+                        <span>Portfolio</span>
                     </div>
                 </a>
             </div>

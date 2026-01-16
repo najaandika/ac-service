@@ -6,12 +6,7 @@
 @section('content')
 <div class="space-y-6">
     <!-- Page Header -->
-    <x-cards.card>
-        <div>
-            <h1 class="text-foreground text-2xl font-bold hidden lg:block">Tambah Teknisi Baru</h1>
-            <p class="text-gray-600">Isi form untuk menambahkan teknisi</p>
-        </div>
-    </x-cards.card>
+    <x-page-header title="Tambah Teknisi Baru" subtitle="Isi form untuk menambahkan teknisi" />
 
     <form action="{{ route('admin.technicians.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
@@ -20,28 +15,28 @@
         <x-cards.card title="Informasi Teknisi">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="md:col-span-2">
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-input w-full @error('name') border-red-500 @enderror" placeholder="Contoh: Ahmad Sulaiman" autocomplete="name" required>
-                    @error('name')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                    <x-forms.input 
+                        name="name" 
+                        label="Nama Lengkap" 
+                        placeholder="Contoh: Ahmad Sulaiman"
+                        :required="true"
+                        autocomplete="name"
+                    />
                 </div>
                 
-                <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon <span class="text-red-500">*</span></label>
-                    <input type="text" name="phone" id="phone" value="{{ old('phone') }}" class="form-input w-full @error('phone') border-red-500 @enderror" placeholder="08123456789" autocomplete="tel" required>
-                    @error('phone')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                <x-forms.input 
+                    name="phone" 
+                    label="Nomor Telepon" 
+                    placeholder="08123456789"
+                    :required="true"
+                    autocomplete="tel"
+                />
                 
-                <div>
-                    <label for="specialty" class="block text-sm font-medium text-gray-700 mb-1">Spesialisasi</label>
-                    <input type="text" name="specialty" id="specialty" value="{{ old('specialty') }}" class="form-input w-full @error('specialty') border-red-500 @enderror" placeholder="Contoh: AC Split, AC Cassette" autocomplete="off">
-                    @error('specialty')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                <x-forms.input 
+                    name="specialty" 
+                    label="Spesialisasi" 
+                    placeholder="Contoh: AC Split, AC Cassette"
+                />
                 
                 <div class="md:col-span-2">
                     <label for="photo" class="block text-sm font-medium text-gray-700 mb-1">Foto Profil</label>
@@ -62,13 +57,10 @@
         </x-cards.card>
 
         <!-- Actions -->
-        <div class="flex items-center justify-end gap-3">
-            <a href="{{ route('admin.technicians.index') }}" class="btn btn-outline">Batal</a>
-            <button type="submit" class="btn btn-primary">
-                <i data-lucide="save" class="w-4 h-4"></i>
-                Simpan Teknisi
-            </button>
-        </div>
+        <x-forms.form-actions 
+            cancelUrl="{{ route('admin.technicians.index') }}" 
+            submitText="Simpan Teknisi" 
+        />
     </form>
 </div>
 @endsection

@@ -2,6 +2,8 @@
 
 @section('title', $service->name . ' - AC Service')
 
+@section('description', 'Layanan ' . $service->name . ' profesional. ' . Str::limit(strip_tags($service->description), 120) . ' Mulai dari ' . $service->formatted_price . '. Pesan sekarang!')
+
 @section('content')
 <section class="py-12 bg-gray-50">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -98,7 +100,7 @@
                     
                     <!-- Capacity Selection -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Kapasitas AC</label>
+                        <span class="block text-sm font-medium text-gray-700 mb-2">Pilih Kapasitas AC</span>
                         <div class="grid grid-cols-3 gap-2">
                             @foreach($service->prices->sortBy('capacity') as $index => $price)
                             <button 
@@ -114,7 +116,7 @@
 
                     <!-- Quantity -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Jumlah Unit</label>
+                        <label for="service-quantity" class="block text-sm font-medium text-gray-700 mb-2">Jumlah Unit</label>
                         <div class="flex items-center justify-center">
                             <button type="button" @click="decrementQty()" class="w-10 h-10 bg-gray-100 rounded-l-lg hover:bg-gray-200 flex items-center justify-center" aria-label="Kurangi jumlah">
                                 <i data-lucide="minus" class="w-4 h-4"></i>
@@ -184,5 +186,34 @@
 
     </div>
 </section>
+
+@push('head')
+{{-- Breadcrumb JSON-LD Structured Data --}}
+@php
+$breadcrumbLd = [
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => 'Beranda', 'item' => url('/')],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => 'Layanan', 'item' => url('/layanan')],
+        ['@type' => 'ListItem', 'position' => 3, 'name' => $service->name, 'item' => url()->current()],
+    ]
+];
+
+$serviceLd = [
+    '@context' => 'https://schema.org',
+    '@type' => 'Service',
+    'name' => $service->name,
+    'description' => $service->description,
+    'provider' => [
+        '@type' => 'LocalBusiness',
+        'name' => $settings['site_name'] ?? 'AC Service',
+    ],
+    'areaServed' => 'Indonesia',
+];
+@endphp
+<script type="application/ld+json">{!! json_encode($breadcrumbLd, JSON_UNESCAPED_SLASHES) !!}</script>
+<script type="application/ld+json">{!! json_encode($serviceLd, JSON_UNESCAPED_SLASHES) !!}</script>
+@endpush
 
 @endsection

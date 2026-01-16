@@ -28,6 +28,18 @@
                     <span class="{{ ($navActive['testimoni'] ?? false) ? '' : 'group-hover:text-primary' }}">Testimoni</span>
                 </div>
             </a>
+            <a href="{{ route('gallery') }}" data-nav="gallery" class="block mobile-nav-link">
+                <div class="nav-item {{ ($navActive['gallery'] ?? false) ? 'nav-item-active' : 'nav-item-inactive group' }}">
+                    <i data-lucide="images" class="w-5 h-5 {{ ($navActive['gallery'] ?? false) ? '' : 'text-gray-600 group-hover:text-primary' }}"></i>
+                    <span class="{{ ($navActive['gallery'] ?? false) ? '' : 'group-hover:text-primary' }}">Gallery</span>
+                </div>
+            </a>
+            <a href="{{ route('faq') }}" data-nav="faq" class="block mobile-nav-link">
+                <div class="nav-item {{ ($navActive['faq'] ?? false) ? 'nav-item-active' : 'nav-item-inactive group' }}">
+                    <i data-lucide="help-circle" class="w-5 h-5 {{ ($navActive['faq'] ?? false) ? '' : 'text-gray-600 group-hover:text-primary' }}"></i>
+                    <span class="{{ ($navActive['faq'] ?? false) ? '' : 'group-hover:text-primary' }}">FAQ</span>
+                </div>
+            </a>
             
             <!-- Separator -->
             <div class="border-t border-gray-200 my-3"></div>
@@ -51,61 +63,3 @@
 <!-- Overlay -->
 <div id="mobile-overlay" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
 
-<script>
-// Handle mobile nav active state based on current URL and hash
-document.addEventListener('DOMContentLoaded', function() {
-    updateMobileNavActive();
-    window.addEventListener('hashchange', updateMobileNavActive);
-});
-
-function updateMobileNavActive() {
-    const path = window.location.pathname;
-    const hash = window.location.hash;
-    const links = document.querySelectorAll('.mobile-nav-link');
-    
-    links.forEach(link => {
-        const navItem = link.querySelector('.nav-item');
-        const icon = link.querySelector('i');
-        const span = link.querySelector('span');
-        const navKey = link.dataset.nav;
-        
-        let isActive = false;
-        
-        // Check active state
-        if (navKey === 'home' && path === '/' && !hash) {
-            isActive = true;
-        } else if (navKey === 'layanan' && (hash === '#layanan' || path.startsWith('/layanan/'))) {
-            isActive = true;
-        } else if (navKey === 'testimoni' && path.startsWith('/testimoni')) {
-            isActive = true;
-        } else if (navKey === 'track' && path === '/track') {
-            isActive = true;
-        } else if (navKey === 'order' && path === '/order') {
-            isActive = true;
-        }
-        
-        // Update classes
-        if (isActive) {
-            navItem.classList.remove('nav-item-inactive', 'group');
-            navItem.classList.add('nav-item-active');
-            icon.classList.remove('text-gray-600', 'group-hover:text-primary');
-            span.classList.remove('group-hover:text-primary');
-        } else {
-            navItem.classList.remove('nav-item-active');
-            navItem.classList.add('nav-item-inactive', 'group');
-            icon.classList.add('text-gray-600', 'group-hover:text-primary');
-            span.classList.add('group-hover:text-primary');
-        }
-    });
-}
-
-// Update when clicking nav link
-document.querySelectorAll('.mobile-nav-link').forEach(link => {
-    link.addEventListener('click', function() {
-        setTimeout(() => {
-            toggleMobileSidebar();
-            updateMobileNavActive();
-        }, 100);
-    });
-});
-</script>

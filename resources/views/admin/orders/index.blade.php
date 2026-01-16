@@ -43,6 +43,20 @@
                 <a href="{{ route('admin.orders.index') }}" class="btn btn-outline">Reset</a>
             </div>
         </form>
+        
+        {{-- Quick Filter: Tomorrow Orders (H-1 Reminder) --}}
+        @if($tomorrowCount > 0 || request('tomorrow'))
+        <div class="mt-4 pt-4 border-t flex flex-wrap gap-2">
+            <a href="{{ route('admin.orders.index', ['tomorrow' => 1]) }}" 
+               class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors {{ request('tomorrow') ? 'bg-amber-500 text-white' : 'bg-amber-100 text-amber-700 hover:bg-amber-200' }}">
+                <i data-lucide="bell" class="w-4 h-4"></i>
+                Jadwal Besok
+                @if($tomorrowCount > 0)
+                <span class="bg-white/20 px-1.5 py-0.5 rounded-full text-xs">{{ $tomorrowCount }}</span>
+                @endif
+            </a>
+        </div>
+        @endif
     </x-cards.card>
 
     <!-- Orders -->

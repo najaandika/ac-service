@@ -4,13 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Helpers\AcCapacity;
+use App\Http\Requests\StoreServiceRequest;
+use App\Http\Requests\UpdateServiceRequest;
 use App\Models\Service;
 use App\Models\ServicePrice;
+use App\Traits\Toggleable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {
+    use Toggleable;
     /**
      * Display a listing of services.
      */
@@ -45,28 +49,9 @@ class ServiceController extends Controller
     /**
      * Store a newly created service.
      */
-    public function store(Request $request)
+    public function store(StoreServiceRequest $request)
     {
-        // Clean price format (remove dots used as thousand separator)
-        if ($request->has('prices')) {
-            $cleanedPrices = [];
-            foreach ($request->input('prices') as $key => $value) {
-                $cleanedPrices[$key] = (int) str_replace(['.', ','], '', $value);
-            }
-            $request->merge(['prices' => $cleanedPrices]);
-        }
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:services',
-            'description' => 'required|string',
-            'duration_minutes' => 'required|integer|min:15',
-            'icon' => 'required|string|max:50',
-            'features' => 'nullable|array',
-            'features.*' => 'nullable|string|max:255',
-            'is_active' => 'boolean',
-            'prices' => 'required|array',
-            'prices.*' => 'required|numeric|min:0',
-        ]);
+        $validated = $request->validated();
         
         // Create service
         $service = Service::create([
@@ -75,22 +60,12 @@ class ServiceController extends Controller
             'description' => $validated['description'],
             'duration_minutes' => $validated['duration_minutes'],
             'icon' => $validated['icon'],
-            'features' => array_filter($validated['features'] ?? []),
-            'is_active' => $request->boolean('is_active', true),
+            'features' => $validated['features'],
+            'is_active' => $validated['is_active'],
         ]);
         
         // Create prices for each capacity
-        foreach ($validated['prices'] as $capacity => $price) {
-            if ($price > 0) {
-                // Ensure capacity has 'pk' suffix
-                $capacityKey = str_ends_with($capacity, 'pk') ? $capacity : $capacity . 'pk';
-                ServicePrice::create([
-                    'service_id' => $service->id,
-                    'capacity' => $capacityKey,
-                    'price' => $price,
-                ]);
-            }
-        }
+        $this->syncPrices($service, $validated['prices']);
         
         return redirect()
             ->route('admin.services.index')
@@ -114,28 +89,9 @@ class ServiceController extends Controller
     /**
      * Update the specified service.
      */
-    public function update(Request $request, Service $service)
+    public function update(UpdateServiceRequest $request, Service $service)
     {
-        // Clean price format (remove dots used as thousand separator)
-        if ($request->has('prices')) {
-            $cleanedPrices = [];
-            foreach ($request->input('prices') as $key => $value) {
-                $cleanedPrices[$key] = (int) str_replace(['.', ','], '', $value);
-            }
-            $request->merge(['prices' => $cleanedPrices]);
-        }
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:services,name,' . $service->id,
-            'description' => 'required|string',
-            'duration_minutes' => 'required|integer|min:15',
-            'icon' => 'required|string|max:50',
-            'features' => 'nullable|array',
-            'features.*' => 'nullable|string|max:255',
-            'is_active' => 'boolean',
-            'prices' => 'required|array',
-            'prices.*' => 'required|numeric|min:0',
-        ]);
+        $validated = $request->validated();
         
         // Update service
         $service->update([
@@ -144,24 +100,13 @@ class ServiceController extends Controller
             'description' => $validated['description'],
             'duration_minutes' => $validated['duration_minutes'],
             'icon' => $validated['icon'],
-            'features' => array_filter($validated['features'] ?? []),
-            'is_active' => $request->boolean('is_active', true),
+            'features' => $validated['features'],
+            'is_active' => $validated['is_active'],
         ]);
         
-        // Update prices - delete old and create new
+        // Update prices
         $service->prices()->delete();
-        
-        foreach ($validated['prices'] as $capacity => $price) {
-            if ($price > 0) {
-                // Ensure capacity has 'pk' suffix
-                $capacityKey = str_ends_with($capacity, 'pk') ? $capacity : $capacity . 'pk';
-                ServicePrice::create([
-                    'service_id' => $service->id,
-                    'capacity' => $capacityKey,
-                    'price' => $price,
-                ]);
-            }
-        }
+        $this->syncPrices($service, $validated['prices']);
         
         return redirect()
             ->route('admin.services.index')
@@ -191,19 +136,23 @@ class ServiceController extends Controller
      */
     public function toggleStatus(Request $request, Service $service)
     {
-        $service->update(['is_active' => !$service->is_active]);
-        
-        // Return JSON for AJAX requests
-        if ($request->wantsJson() || $request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'is_active' => $service->is_active,
-                'message' => $service->is_active ? 'Layanan diaktifkan!' : 'Layanan dinonaktifkan!'
-            ]);
+        return $this->handleToggleStatus($request, $service, 'Layanan');
+    }
+
+    /**
+     * Sync service prices for each capacity.
+     */
+    private function syncPrices(Service $service, array $prices): void
+    {
+        foreach ($prices as $capacity => $price) {
+            if ($price > 0) {
+                $capacityKey = str_ends_with($capacity, 'pk') ? $capacity : $capacity . 'pk';
+                ServicePrice::create([
+                    'service_id' => $service->id,
+                    'capacity' => $capacityKey,
+                    'price' => $price,
+                ]);
+            }
         }
-        
-        $status = $service->is_active ? 'diaktifkan' : 'dinonaktifkan';
-        
-        return back()->with('success', "Layanan berhasil {$status}!");
     }
 }

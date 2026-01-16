@@ -4,7 +4,7 @@
 @section('page-title', 'Pengaturan')
 
 @section('content')
-<div class="space-y-6" x-data="{ activeTab: 'profile' }">
+<div class="space-y-6" x-data="{ activeTab: '{{ request('tab', 'profile') }}' }">
     <!-- Page Header -->
     <x-cards.card>
         <div>
@@ -43,9 +43,10 @@
             </button>
         </div>
 
-        <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="p-6">
+        <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="p-6" x-ref="settingsForm">
             @csrf
             @method('PUT')
+            <input type="hidden" name="active_tab" :value="activeTab">
 
             <!-- Profile Tab -->
             <div x-show="activeTab === 'profile'" x-cloak class="space-y-6">
@@ -125,13 +126,49 @@
                     </div>
                     
                     <div class="md:col-span-2">
-                        <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                        <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Alamat (Teks Tampilan)</label>
                         <textarea name="address" id="address" rows="2" class="form-input w-full" placeholder="Jl. Contoh No. 123, Jakarta" autocomplete="street-address">{{ $settings['address'] ?? '' }}</textarea>
+                        <p class="text-xs text-gray-500 mt-1">Alamat yang ditampilkan di website</p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="address_maps_url" class="block text-sm font-medium text-gray-700 mb-1">
+                            <span class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                </svg>
+                                Link Google Maps (Lokasi)
+                            </span>
+                        </label>
+                        <input type="url" name="address_maps_url" id="address_maps_url" value="{{ $settings['address_maps_url'] ?? '' }}" class="form-input w-full" placeholder="https://maps.google.com/?q=..." autocomplete="off">
+                        <p class="text-xs text-gray-500 mt-1">Link lokasi di Google Maps. Buka Maps → Cari lokasi → Bagikan → Salin Link</p>
                     </div>
 
                     <div>
                         <label for="operating_hours" class="block text-sm font-medium text-gray-700 mb-1">Jam Operasional</label>
                         <input type="text" name="operating_hours" id="operating_hours" value="{{ $settings['operating_hours'] ?? '' }}" class="form-input w-full" placeholder="Senin - Sabtu, 08:00 - 17:00" autocomplete="off">
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label for="service_areas" class="block text-sm font-medium text-gray-700 mb-1">
+                            <span class="flex items-center gap-2">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-primary"></i>
+                                Area Layanan
+                            </span>
+                        </label>
+                        <input type="text" name="service_areas" id="service_areas" value="{{ $settings['service_areas'] ?? '' }}" class="form-input w-full" placeholder="Bandung, Cimahi, Bandung Barat, Sumedang" autocomplete="off">
+                        <p class="text-xs text-gray-500 mt-1">Pisahkan dengan koma. Contoh: Bandung, Cimahi, Bandung Barat</p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="time_slots" class="block text-sm font-medium text-gray-700 mb-1">
+                            <span class="flex items-center gap-2">
+                                <i data-lucide="clock" class="w-4 h-4 text-primary"></i>
+                                Slot Waktu Layanan
+                            </span>
+                        </label>
+                        <input type="text" name="time_slots" id="time_slots" value="{{ $settings['time_slots'] ?? '08:00, 09:00, 10:00, 11:00, 13:00, 14:00, 15:00, 16:00' }}" class="form-input w-full" placeholder="08:00, 09:00, 10:00, 13:00, 14:00" autocomplete="off">
+                        <p class="text-xs text-gray-500 mt-1">Pilihan jam yang tersedia untuk customer. Pisahkan dengan koma.</p>
                     </div>
                 </div>
             </div>
@@ -257,14 +294,4 @@
     </div>
 </div>
 
-@push('scripts')
-<script>
-function previewAudio(url) {
-    const audio = new Audio(url);
-    audio.play().catch(err => {
-        alert('Tidak dapat memutar audio. Pastikan file valid.');
-    });
-}
-</script>
-@endpush
 @endsection

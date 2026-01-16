@@ -10,10 +10,13 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\TechnicianController;
+use App\Http\Controllers\Admin\PromoController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/robots.txt', [\App\Http\Controllers\SitemapController::class, 'robots']);
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 
 // Service routes
 Route::get('/layanan', [ServiceController::class, 'index'])->name('services.index');
@@ -22,11 +25,24 @@ Route::get('/layanan/{slug}', [ServiceController::class, 'show'])->name('service
 // Testimoni route
 Route::get('/testimoni', [\App\Http\Controllers\TestimoniController::class, 'index'])->name('testimoni.index');
 
+// Gallery route
+Route::get('/gallery', \App\Http\Controllers\GalleryController::class)->name('gallery');
+
+// FAQ route
+Route::get('/faq', \App\Http\Controllers\FaqController::class)->name('faq');
+
 // Order routes
 Route::get('/order', [OrderController::class, 'create'])->name('order.create');
 Route::post('/order', [OrderController::class, 'store'])->name('order.store');
 Route::get('/order/success', [OrderController::class, 'success'])->name('order.success');
 Route::get('/track', [OrderController::class, 'track'])->name('order.track');
+
+// Promo validation API (public)
+Route::post('/api/promo/validate', [OrderController::class, 'validatePromo'])->name('promo.validate');
+
+// Invoice routes (public with order code access)
+Route::get('/invoice/{order}/download', [\App\Http\Controllers\InvoiceController::class, 'download'])->name('invoice.download');
+Route::get('/invoice/{order}/view', [\App\Http\Controllers\InvoiceController::class, 'stream'])->name('invoice.view');
 
 // Rating routes
 Route::get('/order/{code}/rate', [\App\Http\Controllers\RatingController::class, 'show'])->name('order.rate.show');
@@ -46,6 +62,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
     Route::patch('/orders/{order}/technician', [AdminOrderController::class, 'assignTechnician'])->name('orders.technician');
+    Route::patch('/orders/{order}/departed', [AdminOrderController::class, 'markDeparted'])->name('orders.departed');
 
     // Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
@@ -60,11 +77,17 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::resource('technicians', TechnicianController::class);
     Route::patch('/technicians/{technician}/toggle', [TechnicianController::class, 'toggleStatus'])->name('technicians.toggle');
 
+    // Promo management
+    Route::resource('promos', PromoController::class);
+    Route::patch('/promos/{promo}/toggle', [PromoController::class, 'toggleStatus'])->name('promos.toggle');
+
     // Customer management (view-only)
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
     Route::get('/customers/{customer}', [CustomerController::class, 'show'])->name('customers.show');
     Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
 
+    // Portfolio management
+    Route::resource('portfolios', \App\Http\Controllers\Admin\PortfolioController::class)->except(['show']);
     // Settings
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');

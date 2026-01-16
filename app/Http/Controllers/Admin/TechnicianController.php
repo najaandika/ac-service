@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTechnicianRequest;
+use App\Http\Requests\UpdateTechnicianRequest;
 use App\Models\Technician;
+use App\Traits\Toggleable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class TechnicianController extends Controller
 {
+    use Toggleable;
     /**
      * Display a listing of technicians.
      */
@@ -46,15 +50,9 @@ class TechnicianController extends Controller
     /**
      * Store a newly created technician.
      */
-    public function store(Request $request)
+    public function store(StoreTechnicianRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'specialty' => 'nullable|string|max:255',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'is_active' => 'boolean',
-        ]);
+        $validated = $request->validated();
         
         // Handle photo upload
         if ($request->hasFile('photo')) {
@@ -81,15 +79,9 @@ class TechnicianController extends Controller
     /**
      * Update the specified technician.
      */
-    public function update(Request $request, Technician $technician)
+    public function update(UpdateTechnicianRequest $request, Technician $technician)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'specialty' => 'nullable|string|max:255',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'is_active' => 'boolean',
-        ]);
+        $validated = $request->validated();
         
         // Handle photo upload
         if ($request->hasFile('photo')) {
@@ -136,19 +128,6 @@ class TechnicianController extends Controller
      */
     public function toggleStatus(Request $request, Technician $technician)
     {
-        $technician->update(['is_active' => !$technician->is_active]);
-        
-        // Return JSON for AJAX requests
-        if ($request->wantsJson() || $request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'is_active' => $technician->is_active,
-                'message' => $technician->is_active ? 'Teknisi diaktifkan!' : 'Teknisi dinonaktifkan!'
-            ]);
-        }
-        
-        $status = $technician->is_active ? 'diaktifkan' : 'dinonaktifkan';
-        
-        return back()->with('success', "Teknisi berhasil {$status}!");
+        return $this->handleToggleStatus($request, $technician, 'Teknisi');
     }
 }

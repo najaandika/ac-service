@@ -41,10 +41,21 @@ class OrderController extends Controller
             });
         }
 
+        // Filter for tomorrow's orders (H-1 reminder)
+        if ($request->has('tomorrow') && $request->tomorrow) {
+            $query->whereDate('scheduled_date', now()->addDay()->format('Y-m-d'))
+                  ->whereNotIn('status', ['completed', 'cancelled']);
+        }
+
         $orders = $query->orderBy('created_at', 'desc')->paginate(15);
         $technicians = Technician::active()->get();
+        
+        // Count tomorrow's orders for H-1 reminder badge
+        $tomorrowCount = Order::whereDate('scheduled_date', now()->addDay()->format('Y-m-d'))
+            ->whereNotIn('status', ['completed', 'cancelled'])
+            ->count();
 
-        return view('admin.orders.index', compact('orders', 'technicians'));
+        return view('admin.orders.index', compact('orders', 'technicians', 'tomorrowCount'));
     }
 
     /**
@@ -55,11 +66,20 @@ class OrderController extends Controller
         $order->load(['customer', 'service', 'technician', 'review']);
         $technicians = Technician::active()->get();
         
-        // Generate WhatsApp URL
+        // Generate WhatsApp URL for status notification
         $whatsappService = new \App\Services\WhatsAppService();
         $whatsappUrl = $whatsappService->generateOrderStatusUrl($order);
+        
+        // Generate H-1 Reminder URL
+        $reminderMessage = "Halo {$order->customer->name}, ini reminder untuk jadwal service AC Anda:\n\n"
+            . "📅 *Besok, " . $order->scheduled_date->translatedFormat('d F Y') . "*\n"
+            . "⏰ Pukul: *" . $order->scheduled_time_slot . "*\n"
+            . "🔧 Layanan: *" . $order->service->name . "*\n"
+            . "📍 Alamat: " . $order->customer->address . "\n\n"
+            . "Mohon pastikan ada yang menerima teknisi kami ya. Terima kasih! 🙏";
+        $reminderUrl = "https://wa.me/" . preg_replace('/^0/', '62', $order->customer->phone) . "?text=" . urlencode($reminderMessage);
 
-        return view('admin.orders.show', compact('order', 'technicians', 'whatsappUrl'));
+        return view('admin.orders.show', compact('order', 'technicians', 'whatsappUrl', 'reminderUrl'));
     }
 
     /**
@@ -94,5 +114,18 @@ class OrderController extends Controller
         Technician::find($validated['technician_id'])->increment('total_orders');
 
         return back()->with('success', 'Teknisi berhasil ditugaskan.');
+    }
+
+    /**
+     * Mark technician as departed (on the way)
+     */
+    public function markDeparted(Order $order)
+    {
+        $order->update([
+            'departed_at' => now(),
+            'status' => 'in_progress',
+        ]);
+
+        return back()->with('success', 'Teknisi ditandai sudah berangkat.');
     }
 }

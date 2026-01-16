@@ -2,6 +2,8 @@
 
 @section('title', 'Lacak Status Order - AC Service')
 
+@section('description', 'Lacak status order service AC Anda. Masukkan kode order atau nomor WhatsApp untuk melihat progress layanan secara real-time.')
+
 @section('content')
 <section class="py-16 bg-gray-50 min-h-[calc(100vh-64px)]">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,7 +20,7 @@
                     name="query"
                     id="track-query"
                     value="{{ $query ?? '' }}"
-                    placeholder="Contoh: AC123XYZ atau 0812345xxxxx" 
+                    placeholder="Masukkan kode order atau no. HP" 
                     class="form-input pl-5 pr-12 py-3.5 text-lg"
                     autocomplete="off"
                     required
@@ -88,12 +90,40 @@
                                 </a>
                             </div>
                         </div>
+                        
+                        {{-- Departure Status --}}
+                        @if($order->departed_at)
+                        <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <i data-lucide="truck" class="w-5 h-5 text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-blue-900">Teknisi Dalam Perjalanan</p>
+                                    <p class="text-sm text-blue-700">Berangkat pukul {{ $order->departed_at->format('H:i') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                        
                         @else
                         <div class="mt-4 bg-yellow-50 text-yellow-800 text-sm px-4 py-2 rounded-lg flex items-center gap-2">
                             <i data-lucide="info" class="w-4 h-4"></i>
                             Teknisi sedang dijadwalkan oleh admin.
                         </div>
                         @endif
+
+                        {{-- Invoice Download Button --}}
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <a href="{{ route('invoice.download', $order) }}" class="btn btn-outline gap-2 flex-1 justify-center">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                                Download Invoice
+                            </a>
+                            <a href="{{ route('invoice.view', $order) }}" target="_blank" class="btn btn-outline gap-2 flex-1 justify-center">
+                                <i data-lucide="file-text" class="w-4 h-4"></i>
+                                Lihat Invoice
+                            </a>
+                        </div>
 
                         <!-- Rating Button for Completed Orders -->
                         @if($order->status === 'completed')

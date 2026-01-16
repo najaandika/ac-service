@@ -17,9 +17,12 @@ const colors = {
 
 // Common chart options
 const commonOptions = {
-    animation: false,
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+        duration: 800,
+        easing: 'easeOutQuart'
+    },
     plugins: {
         legend: { position: 'bottom' }
     }

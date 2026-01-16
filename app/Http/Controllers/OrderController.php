@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\Promo;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,46 +25,53 @@ class OrderController extends Controller
             $selectedService = Service::where('slug', $request->service)->with('prices')->first();
         }
         
-        return view('order.create', compact('services', 'selectedService', 'selectedCapacity', 'selectedQty'));
+        // Calculate total price for display
+        $totalPrice = null;
+        if ($selectedService) {
+            $priceRecord = $selectedService->prices->where('capacity', $selectedCapacity)->first();
+            $unitPrice = $priceRecord ? $priceRecord->price : $selectedService->price;
+            $totalPrice = $unitPrice * $selectedQty;
+        }
+        
+        // Get active promos
+        $activePromos = Promo::where('is_active', true)
+            ->where(function ($q) {
+                $q->whereNull('start_date')->orWhere('start_date', '<=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('end_date')->orWhere('end_date', '>=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('usage_limit')->orWhereColumn('usage_count', '<', 'usage_limit');
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Get settings for time slots
+        $settings = \App\Models\Setting::getAllAsArray();
+        
+        // Unit price for promo calculation
+        $unitPrice = 0;
+        if ($selectedService) {
+            $priceRecord = $selectedService->prices->where('capacity', $selectedCapacity)->first();
+            $unitPrice = $priceRecord ? $priceRecord->price : $selectedService->price;
+        }
+
+        return view('order.create', compact('services', 'selectedService', 'selectedCapacity', 'selectedQty', 'totalPrice', 'unitPrice', 'activePromos', 'settings'));
     }
 
     /**
      * Store a new order
      */
-    public function store(Request $request)
+    public function store(\App\Http\Requests\StoreOrderRequest $request)
     {
-        $validated = $request->validate([
-            'service_id' => 'required|exists:services,id',
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20|regex:/^[0-9]+$/',
-            'email' => 'nullable|email|max:255',
-            'address' => 'required|string',
-            'city' => 'nullable|string|max:100',
-            'ac_type' => 'required|in:split,cassette,standing,central,window',
-            'ac_capacity' => 'required|in:0.5pk,0.75pk,1pk,1.5pk,2pk,2.5pk,3pk,5pk',
-            'ac_quantity' => 'required|integer|min:1|max:10',
-            'scheduled_date' => 'required|date|after_or_equal:today',
-            'scheduled_time' => 'required|in:pagi,siang,sore',
-            'notes' => 'nullable|string|max:1000',
-        ], [
-            'service_id.required' => 'Silakan pilih layanan terlebih dahulu.',
-            'service_id.exists' => 'Layanan yang dipilih tidak valid.',
-            'name.required' => 'Nama lengkap wajib diisi.',
-            'phone.required' => 'Nomor WhatsApp wajib diisi.',
-            'phone.regex' => 'Nomor WhatsApp hanya boleh berisi angka.',
-            'address.required' => 'Alamat wajib diisi.',
-            'ac_type.required' => 'Tipe AC wajib dipilih.',
-            'ac_capacity.required' => 'Kapasitas AC wajib dipilih.',
-            'scheduled_date.required' => 'Tanggal layanan wajib diisi.',
-            'scheduled_date.after_or_equal' => 'Tanggal layanan tidak boleh di masa lalu.',
-            'scheduled_time.required' => 'Waktu layanan wajib dipilih.',
-        ]);
+        $validated = $request->validated();
 
         try {
             DB::beginTransaction();
 
-            // Create or find customer
-            $customer = Customer::firstOrCreate(
+            // Create or find customer (update if exists)
+            $customer = Customer::updateOrCreate(
                 ['phone' => $validated['phone']],
                 [
                     'name' => $validated['name'],
@@ -73,19 +81,30 @@ class OrderController extends Controller
                 ]
             );
 
-            // Update customer data if exists
-            $customer->update([
-                'name' => $validated['name'],
-                'address' => $validated['address'],
-                'email' => $validated['email'] ?? $customer->email,
-                'city' => $validated['city'] ?? $customer->city,
-            ]);
-
-            // Get service price based on capacity
+            // Get service and calculate price
             $service = Service::with('prices')->findOrFail($validated['service_id']);
-            $priceRecord = $service->prices()->where('capacity', $validated['ac_capacity'])->first();
-            $unitPrice = $priceRecord ? $priceRecord->price : $service->price;
+            $unitPrice = $service->getPriceForCapacity($validated['ac_capacity']);
             $servicePrice = $unitPrice * $validated['ac_quantity'];
+
+            // Handle promo code if provided
+            $discount = 0;
+            $promoId = null;
+            $promoCode = $request->input('promo_code');
+            
+            if ($promoCode) {
+                // Determine promo regardless of validation (validation already done in request, but logical check needed for calculation)
+                $promo = Promo::where('code', strtoupper($promoCode))->first();
+                if ($promo) {
+                    $validation = $promo->isValid($validated['service_id'], $servicePrice);
+                    if ($validation['valid']) {
+                        $discount = $promo->calculateDiscount($servicePrice);
+                        $promoId = $promo->id;
+                        $promo->incrementUsage();
+                    }
+                }
+            }
+
+            $totalPrice = $servicePrice - $discount;
 
             // Create order
             $order = Order::create([
@@ -98,7 +117,10 @@ class OrderController extends Controller
                 'scheduled_time' => $validated['scheduled_time'],
                 'notes' => $validated['notes'] ?? null,
                 'service_price' => $servicePrice,
-                'total_price' => $servicePrice,
+                'discount' => $discount,
+                'promo_id' => $promoId,
+                'promo_code' => $promoCode ? strtoupper($promoCode) : null,
+                'total_price' => $totalPrice,
                 'status' => 'pending',
             ]);
 
@@ -108,7 +130,7 @@ class OrderController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->withErrors(['error' => 'Terjadi kesalahan. Silakan coba lagi.']);
+            return back()->withInput()->withErrors(['error' => 'Terjadi kesalahan saat memproses order: ' . $e->getMessage()]);
         }
     }
 
@@ -121,7 +143,23 @@ class OrderController extends Controller
             ->with(['service', 'customer'])
             ->firstOrFail();
 
-        return view('order.success', compact('order'));
+        // Generate WhatsApp URL
+        $waUrl = null;
+        $settings = \App\Models\Setting::getAllAsArray();
+        if (!empty($settings['whatsapp'])) {
+            $waMessage = "Halo, saya ingin konfirmasi order:\n\n";
+            $waMessage .= "📋 *Kode Order:* " . $order->order_code . "\n";
+            $waMessage .= "🔧 *Layanan:* " . $order->service->name . "\n";
+            $waMessage .= "📅 *Jadwal:* " . $order->scheduled_date->format('d/m/Y') . " (" . $order->scheduled_time_slot . ")\n";
+            $waMessage .= "📍 *Alamat:* " . $order->customer->address . "\n";
+            $waMessage .= "👤 *Nama:* " . $order->customer->name . "\n";
+            $waMessage .= "📱 *HP:* " . $order->customer->phone . "\n\n";
+            $waMessage .= "Mohon konfirmasi order saya. Terima kasih! 🙏";
+            $waNumber = preg_replace('/[^0-9]/', '', $settings['whatsapp']);
+            $waUrl = "https://wa.me/{$waNumber}?text=" . urlencode($waMessage);
+        }
+
+        return view('order.success', compact('order', 'waUrl'));
     }
 
     /**
@@ -130,6 +168,53 @@ class OrderController extends Controller
     public function trackForm()
     {
         return view('order.track');
+    }
+
+    /**
+     * Validate promo code (API endpoint)
+     */
+    public function validatePromo(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string|max:50',
+            'service_id' => 'nullable|integer',
+            'subtotal' => 'nullable|numeric|min:0',
+        ]);
+
+        $promo = Promo::where('code', strtoupper($request->code))->first();
+
+        if (!$promo) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'Kode promo tidak ditemukan',
+            ]);
+        }
+
+        $serviceId = $request->input('service_id');
+        $subtotal = $request->input('subtotal', 0);
+
+        $validation = $promo->isValid($serviceId, $subtotal);
+
+        if (!$validation['valid']) {
+            return response()->json([
+                'valid' => false,
+                'message' => $validation['message'],
+            ]);
+        }
+
+        $discount = $promo->calculateDiscount($subtotal);
+
+        return response()->json([
+            'valid' => true,
+            'message' => 'Kode promo berhasil diterapkan: ' . $promo->name,
+            'discount' => $discount,
+            'promo' => [
+                'code' => $promo->code,
+                'name' => $promo->name,
+                'type' => $promo->type,
+                'value' => $promo->value,
+            ],
+        ]);
     }
 
     /**

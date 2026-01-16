@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Order;
 use App\Models\Setting;
 use App\View\Composers\PublicLayoutComposer;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Set Carbon locale for Indonesian date format
+        Carbon::setLocale('id');
+        
         // Share pendingOrderCount globally with all admin views
         View::composer('layouts.app', function ($view) {
             $view->with('pendingOrderCount', Order::where('status', 'pending')->count());
