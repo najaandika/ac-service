@@ -6,6 +6,7 @@
     'placeholder' => 'Pilih...',
     'required' => false,
     'disabled' => false,
+    'autocomplete' => 'off',
     'error' => null
 ])
 
@@ -20,6 +21,7 @@
     <select 
         id="{{ $name }}" 
         name="{{ $name }}"
+        autocomplete="{{ $autocomplete }}"
         {{ $required ? 'required' : '' }}
         {{ $disabled ? 'disabled' : '' }}
         {{ $attributes->merge(['class' => 'form-input' . ($error ? ' border-error' : '')]) }}

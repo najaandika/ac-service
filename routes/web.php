@@ -59,6 +59,8 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     
     // Order management
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/create', [AdminOrderController::class, 'create'])->name('orders.create');
+    Route::post('/orders', [AdminOrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
     Route::patch('/orders/{order}/technician', [AdminOrderController::class, 'assignTechnician'])->name('orders.technician');

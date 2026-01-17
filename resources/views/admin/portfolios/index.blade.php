@@ -4,7 +4,7 @@
 @section('page-title', 'Portfolio')
 
 @section('content')
-<div class="space-y-6" x-data="deleteModal">
+<div class="space-y-6" x-data="{ showDeleteModal: false, deleteUrl: '', itemName: '', openDeleteModal(url, name) { this.deleteUrl = url; this.itemName = name; this.showDeleteModal = true; } }">
     <!-- Page Header -->
     <x-page-header title="Kelola Portfolio" subtitle="Foto hasil kerja Before/After">
         <x-slot:actions>

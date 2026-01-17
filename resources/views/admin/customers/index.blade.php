@@ -107,6 +107,7 @@
                                     <i data-lucide="eye" class="w-4 h-4"></i>
                                     <span class="hidden lg:inline ml-1">Detail</span>
                                 </a>
+                                @if($customer->orders_count === 0)
                                 <form action="{{ route('admin.customers.destroy', $customer) }}" method="POST" onsubmit="return confirm('Yakin hapus pelanggan {{ $customer->name }}?')">
                                     @csrf
                                     @method('DELETE')
@@ -114,6 +115,7 @@
                                         <i data-lucide="trash-2" class="w-4 h-4"></i>
                                     </button>
                                 </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

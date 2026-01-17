@@ -46,8 +46,8 @@
                             value="0"
                         />
                         <div class="flex items-end pb-1">
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" name="is_published" value="1" checked class="form-checkbox">
+                            <label for="is_published" class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" name="is_published" id="is_published" value="1" checked class="form-checkbox">
                                 <span class="text-sm font-medium text-gray-700">Publikasikan</span>
                             </label>
                         </div>
@@ -57,7 +57,7 @@
                 <!-- Right Column - Image Uploads -->
                 <div class="space-y-4">
                     <div x-data="{ preview: null }">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="before_image" class="block text-sm font-medium text-gray-700 mb-2">
                             Foto Before <span class="text-red-500">*</span>
                         </label>
                         <div class="border-2 border-dashed rounded-xl p-4 text-center transition-colors"
@@ -87,7 +87,7 @@
                     </div>
 
                     <div x-data="{ preview: null }">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="after_image" class="block text-sm font-medium text-gray-700 mb-2">
                             Foto After <span class="text-red-500">*</span>
                         </label>
                         <div class="border-2 border-dashed rounded-xl p-4 text-center transition-colors"

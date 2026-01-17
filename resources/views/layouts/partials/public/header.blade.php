@@ -3,15 +3,8 @@
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
         <div class="flex items-center justify-between h-16">
             <!-- Logo -->
-            <a href="/" class="flex items-center gap-3">
-                @if(!empty($settings['site_logo']))
-                <img src="{{ asset('storage/' . $settings['site_logo']) }}" alt="{{ $settings['site_name'] ?? 'AC Service' }}" class="w-10 h-10 object-contain rounded-full">
-                @else
-                <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-                    <i data-lucide="wind" class="w-5 h-5 text-white"></i>
-                </div>
-                @endif
-                <span class="text-foreground text-lg font-bold">{{ $settings['site_name'] ?? 'AC Service' }}</span>
+            <a href="/" class="flex items-center gap-2">
+                <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['site_name'] ?? 'Tunggal Jaya Tehnik' }}" class="h-14 w-auto object-contain">
             </a>
             
             <!-- Desktop Menu -->

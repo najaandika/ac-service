@@ -6,12 +6,14 @@
 @section('content')
 <div class="space-y-6">
     <!-- Page Header -->
-    <x-cards.card>
-        <div>
-            <h1 class="text-foreground text-2xl font-bold hidden lg:block">Kelola Order</h1>
-            <p class="text-gray-600">Kelola semua order yang masuk</p>
-        </div>
-    </x-cards.card>
+    <x-page-header title="Kelola Order" subtitle="Kelola semua order yang masuk">
+        <x-slot:actions>
+            <a href="{{ route('admin.orders.create') }}" class="btn btn-primary">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                Tambah Order
+            </a>
+        </x-slot:actions>
+    </x-page-header>
 
     <!-- Filters -->
     <x-cards.card>

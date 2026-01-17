@@ -6,6 +6,7 @@
     'rows' => 4,
     'required' => false,
     'disabled' => false,
+    'autocomplete' => 'off',
     'error' => null
 ])
 
@@ -22,6 +23,7 @@
         name="{{ $name }}"
         rows="{{ $rows }}"
         placeholder="{{ $placeholder }}"
+        autocomplete="{{ $autocomplete }}"
         {{ $required ? 'required' : '' }}
         {{ $disabled ? 'disabled' : '' }}
         {{ $attributes->merge(['class' => 'form-input resize-none' . ($error ? ' border-error' : '')]) }}

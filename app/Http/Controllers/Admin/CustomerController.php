@@ -94,16 +94,21 @@ class CustomerController extends Controller
 
     /**
      * Remove the specified customer.
-     * Note: Orders will be deleted due to cascade on delete.
+     * Only allowed if customer has no orders.
      */
     public function destroy(Customer $customer)
     {
-        // Delete associated orders first (cascade)
-        $customer->orders()->delete();
+        // Prevent deletion if customer has orders
+        if ($customer->orders()->exists()) {
+            return redirect()
+                ->route('admin.customers.index')
+                ->with('error', 'Pelanggan tidak dapat dihapus karena memiliki riwayat order.');
+        }
+        
         $customer->delete();
         
         return redirect()
             ->route('admin.customers.index')
-            ->with('success', 'Pelanggan beserta order terkait berhasil dihapus!');
+            ->with('success', 'Pelanggan berhasil dihapus.');
     }
 }

@@ -7,6 +7,7 @@
     'icon' => null,
     'required' => false,
     'disabled' => false,
+    'autocomplete' => 'off',
     'error' => null
 ])
 
@@ -29,6 +30,7 @@
             name="{{ $name }}"
             value="{{ old($name, $value) }}"
             placeholder="{{ $placeholder }}"
+            autocomplete="{{ $autocomplete }}"
             {{ $required ? 'required' : '' }}
             {{ $disabled ? 'disabled' : '' }}
             {{ $attributes->merge(['class' => 'form-input' . ($icon ? ' form-input-icon' : '') . ($error ? ' border-error' : '')]) }}
@@ -41,3 +43,4 @@
         <p class="text-error text-xs mt-1">{{ $errors->first($name) }}</p>
     @endif
 </div>
+

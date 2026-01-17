@@ -4,14 +4,7 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div class="md:col-span-2">
                 <div class="flex items-center gap-3 mb-4">
-                    @if(!empty($settings['site_logo']))
-                    <img src="{{ asset('storage/' . $settings['site_logo']) }}" alt="{{ $settings['site_name'] ?? 'AC Service' }}" class="w-10 h-10 object-contain rounded-full">
-                    @else
-                    <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-                        <i data-lucide="wind" class="w-5 h-5 text-white"></i>
-                    </div>
-                    @endif
-                    <span class="text-white text-lg font-bold">{{ $settings['site_name'] ?? 'AC Service' }}</span>
+                    <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['site_name'] ?? 'Tunggal Jaya Tehnik' }}" class="h-20 w-auto object-contain rounded-xl">
                 </div>
                 <p class="text-gray-300 mb-4 max-w-sm">
                     {{ $settings['site_description'] ?? 'Jasa service AC profesional dengan teknisi berpengalaman. Melayani area Jabodetabek dan sekitarnya.' }}
