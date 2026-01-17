@@ -1,0 +1,5 @@
+# robots.txt for Tunggal Jaya Tehnik
+User-agent: *
+Allow: /
+
+Sitemap: https://tunggaljayatehnik.tech/sitemap.xml
