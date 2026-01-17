@@ -7,6 +7,10 @@ import './bootstrap';
 
 // Import Alpine.js
 import Alpine from 'alpinejs';
+import collapse from '@alpinejs/collapse';
+
+// Register Alpine plugins
+Alpine.plugin(collapse);
 
 // Import modules
 import { toggleSidebar, initAccordions } from './modules/sidebar';
