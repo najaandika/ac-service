@@ -4,7 +4,7 @@
         <div class="flex items-center justify-between h-16">
             <!-- Logo -->
             <a href="/" class="flex items-center gap-2">
-                <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['site_name'] ?? 'Tunggal Jaya Tehnik' }}" class="h-14 w-auto object-contain">
+                <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['site_name'] ?? 'Tunggal Jaya Tehnik' }}" class="h-14 w-auto object-contain" width="56" height="56">
             </a>
             
             <!-- Desktop Menu -->

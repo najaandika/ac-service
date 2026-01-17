@@ -4,7 +4,7 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div class="md:col-span-2">
                 <div class="flex items-center gap-3 mb-4">
-                    <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['site_name'] ?? 'Tunggal Jaya Tehnik' }}" class="h-20 w-auto object-contain rounded-xl">
+                    <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['site_name'] ?? 'Tunggal Jaya Tehnik' }}" class="h-20 w-auto object-contain rounded-xl" width="80" height="80">
                 </div>
                 <p class="text-gray-300 mb-4 max-w-sm">
                     {{ $settings['site_description'] ?? 'Jasa service AC profesional dengan teknisi berpengalaman. Melayani area Jabodetabek dan sekitarnya.' }}
@@ -12,7 +12,7 @@
             </div>
             
             <div>
-                <h4 class="text-white font-semibold mb-4">Layanan</h4>
+                <p class="text-white font-semibold mb-4 text-base">Layanan</p>
                 <ul class="space-y-2 text-gray-300">
                     @forelse($footerServices ?? [] as $service)
                     <li><a href="/layanan/{{ $service->slug }}" class="hover:text-primary">{{ $service->name }}</a></li>
@@ -23,7 +23,7 @@
             </div>
             
             <div>
-                <h4 class="text-white font-semibold mb-4">Kontak</h4>
+                <p class="text-white font-semibold mb-4 text-base">Kontak</p>
                 <ul class="space-y-2 text-gray-300">
                     @if(!empty($settings['phone']))
                     <li class="flex items-center gap-2">
