@@ -23,10 +23,8 @@
 <div class="w-full max-w-md">
     <!-- Logo -->
     <div class="text-center mb-8">
-        <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary/30">
-            <i data-lucide="wind" class="w-10 h-10 text-white"></i>
-        </div>
-        <h1 class="text-foreground text-2xl font-bold">AC Service</h1>
+        <img src="{{ asset('images/logo.png') }}" alt="Tunggal Jaya Tehnik" class="h-24 w-auto object-contain mx-auto mb-4">
+        <h1 class="text-foreground text-2xl font-bold">Tunggal Jaya Tehnik</h1>
         <p class="text-gray-500 text-sm">Admin Dashboard</p>
     </div>
 
