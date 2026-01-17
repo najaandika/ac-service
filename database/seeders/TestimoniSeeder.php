@@ -21,8 +21,14 @@ class TestimoniSeeder extends Seeder
         $service = Service::first();
         
         if (!$service) {
-            $this->command->warn('No services found. Please seed services first.');
-            return;
+            $service = Service::create([
+                'name' => 'Cuci AC Split Wall',
+                'description' => 'Jasa cuci AC split wall standard (0.5 - 2 PK). Membersihkan filter, evaporator, dan condensor.',
+                'price' => 75000,
+                'duration' => 60,
+                'image' => null,
+            ]);
+            $this->command->info('Created default service: Cuci AC Split Wall');
         }
 
         // Real testimonials from Google Maps (with actual dates)
