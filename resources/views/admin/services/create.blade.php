@@ -55,8 +55,19 @@
                         'zap' => '⚡ Zap (Listrik)',
                         'droplets' => '💧 Droplets (Tetes)',
                         'fan' => '🌪️ Fan (Kipas)',
+                        'washing-machine' => '🧺 Washing Machine',
+                        'refrigerator' => '🧊 Refrigerator',
                     ]"
                     placeholder="Pilih icon..."
+                />
+                
+                <x-forms.select 
+                    name="category" 
+                    label="Kategori Layanan" 
+                    :required="true"
+                    :options="\App\Models\Service::CATEGORIES"
+                    :value="old('category', 'ac')"
+                    placeholder="Pilih kategori..."
                 />
                 
                 <div class="md:col-span-2">

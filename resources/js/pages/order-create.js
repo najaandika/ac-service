@@ -10,6 +10,35 @@ window.decrementQuantity = function () {
 }
 
 /**
+ * Service Details Alpine component
+ * Handles conditional visibility of AC-specific fields
+ */
+window.serviceDetails = function () {
+    return {
+        isAcService: true,
+        serviceName: '',
+
+        init() {
+            // Listen to service radio changes
+            document.querySelectorAll('.service-radio').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    const category = e.target.dataset.category || 'ac';
+                    this.isAcService = (category === 'ac');
+                    this.serviceName = e.target.dataset.name || '';
+                });
+
+                // Check if already selected (page reload with old values)
+                if (radio.checked) {
+                    const category = radio.dataset.category || 'ac';
+                    this.isAcService = (category === 'ac');
+                    this.serviceName = radio.dataset.name || '';
+                }
+            });
+        }
+    };
+}
+
+/**
  * Form data persistence using localStorage
  * Saves form data as user types and restores on page reload
  */

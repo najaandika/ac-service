@@ -17,6 +17,7 @@ class Service extends Model
         'features',
         'image',
         'price',
+        'category',
         'duration_minutes',
         'icon',
         'is_active',
@@ -28,6 +29,21 @@ class Service extends Model
         'is_active' => 'boolean',
         'features' => 'array',
     ];
+
+    const CATEGORY_AC = 'ac';
+    const CATEGORY_ELEKTRONIK = 'elektronik';
+    const CATEGORY_INSTALASI = 'instalasi';
+
+    const CATEGORIES = [
+        self::CATEGORY_AC => 'AC',
+        self::CATEGORY_ELEKTRONIK => 'Elektronik',
+        self::CATEGORY_INSTALASI => 'Instalasi',
+    ];
+
+    public function isAcService(): bool
+    {
+        return $this->category === self::CATEGORY_AC;
+    }
 
     protected static function boot()
     {

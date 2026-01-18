@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
-@section('title', 'Order Service AC - AC Service')
+@section('title', 'Order Layanan - Tunggal Jaya Tehnik')
 
-@section('description', 'Pesan layanan service AC online. Cuci AC, isi freon, perbaikan, bongkar pasang. Pilih tanggal dan waktu sesuai jadwal Anda. Teknisi profesional, garansi layanan.')
+@section('description', 'Pesan layanan service online. AC, mesin cuci, kulkas, water heater, pompa air. Pilih tanggal dan waktu sesuai jadwal Anda. Teknisi profesional, garansi layanan.')
 
 @section('content')
 <section class="py-12 bg-gray-50">
@@ -122,13 +122,15 @@
                         Pilih Layanan
                     </h2>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="{ selectedCategory: '' }">
                         @foreach($services as $service)
                         <label class="cursor-pointer group">
                             <input type="radio" name="service_id" value="{{ $service->id }}" class="peer sr-only service-radio" 
                                 data-name="{{ $service->name }}"
                                 data-price="{{ $service->prices->min('price') ?? $service->price }}"
                                 data-prices='@json($service->prices->pluck("price", "capacity"))'
+                                data-category="{{ $service->category }}"
+                                @change="selectedCategory = '{{ $service->category }}'"
                                 {{ old('service_id') == $service->id ? 'checked' : '' }}>
                             <div class="border border-border rounded-xl p-4 peer-checked:border-primary peer-checked:bg-primary/5 hover:border-primary transition-all">
                                 <div class="flex items-center gap-3">
@@ -146,58 +148,71 @@
                     </div>
                 </div>
 
-                <!-- 2. Detail AC -->
-                <div class="border-b border-gray-100 pb-6">
+                <!-- 2. Detail Layanan (Conditional based on category) -->
+                <div class="border-b border-gray-100 pb-6" x-data="serviceDetails()" x-init="init()">
                     <h2 class="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                         <span class="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs">2</span>
-                        Detail AC
+                        <span x-text="isAcService ? 'Detail AC' : 'Detail Layanan'">Detail Layanan</span>
                     </h2>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label for="ac_type_full" class="block text-sm font-medium text-gray-700 mb-1">Tipe AC</label>
-                            <select name="ac_type" id="ac_type_full" class="form-input">
-                                <option value="split" {{ old('ac_type') == 'split' ? 'selected' : '' }}>AC Split (Dinding)</option>
-                                <option value="cassette" {{ old('ac_type') == 'cassette' ? 'selected' : '' }}>AC Cassette</option>
-                                <option value="standing" {{ old('ac_type') == 'standing' ? 'selected' : '' }}>AC Standing</option>
-                                <option value="window" {{ old('ac_type') == 'window' ? 'selected' : '' }}>AC Window</option>
-                                <option value="central" {{ old('ac_type') == 'central' ? 'selected' : '' }}>AC Central</option>
-                            </select>
+                    <!-- AC-Specific Fields (shown only for AC services) -->
+                    <div x-show="isAcService" x-cloak>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="ac_type_full" class="block text-sm font-medium text-gray-700 mb-1">Tipe AC</label>
+                                <select name="ac_type" id="ac_type_full" class="form-input">
+                                    <option value="split" {{ old('ac_type') == 'split' ? 'selected' : '' }}>AC Split (Dinding)</option>
+                                    <option value="cassette" {{ old('ac_type') == 'cassette' ? 'selected' : '' }}>AC Cassette</option>
+                                    <option value="standing" {{ old('ac_type') == 'standing' ? 'selected' : '' }}>AC Standing</option>
+                                    <option value="window" {{ old('ac_type') == 'window' ? 'selected' : '' }}>AC Window</option>
+                                    <option value="central" {{ old('ac_type') == 'central' ? 'selected' : '' }}>AC Central</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="ac_capacity" class="block text-sm font-medium text-gray-700 mb-1">Kapasitas (PK)</label>
+                                <select name="ac_capacity" id="ac_capacity" class="form-input">
+                                    <option value="0.5pk" {{ old('ac_capacity', $selectedCapacity) == '0.5pk' ? 'selected' : '' }}>1/2 PK</option>
+                                    <option value="0.75pk" {{ old('ac_capacity', $selectedCapacity) == '0.75pk' ? 'selected' : '' }}>3/4 PK</option>
+                                    <option value="1pk" {{ old('ac_capacity', $selectedCapacity) == '1pk' ? 'selected' : '' }}>1 PK</option>
+                                    <option value="1.5pk" {{ old('ac_capacity', $selectedCapacity) == '1.5pk' ? 'selected' : '' }}>1.5 PK</option>
+                                    <option value="2pk" {{ old('ac_capacity', $selectedCapacity) == '2pk' ? 'selected' : '' }}>2 PK</option>
+                                    <option value="2.5pk" {{ old('ac_capacity', $selectedCapacity) == '2.5pk' ? 'selected' : '' }}>2.5 PK</option>
+                                    <option value="3pk" {{ old('ac_capacity', $selectedCapacity) == '3pk' ? 'selected' : '' }}>3 PK+</option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                            <label for="ac_capacity" class="block text-sm font-medium text-gray-700 mb-1">Kapasitas (PK)</label>
-                            <select name="ac_capacity" id="ac_capacity" class="form-input">
-                                <option value="0.5pk" {{ old('ac_capacity', $selectedCapacity) == '0.5pk' ? 'selected' : '' }}>1/2 PK</option>
-                                <option value="0.75pk" {{ old('ac_capacity', $selectedCapacity) == '0.75pk' ? 'selected' : '' }}>3/4 PK</option>
-                                <option value="1pk" {{ old('ac_capacity', $selectedCapacity) == '1pk' ? 'selected' : '' }}>1 PK</option>
-                                <option value="1.5pk" {{ old('ac_capacity', $selectedCapacity) == '1.5pk' ? 'selected' : '' }}>1.5 PK</option>
-                                <option value="2pk" {{ old('ac_capacity', $selectedCapacity) == '2pk' ? 'selected' : '' }}>2 PK</option>
-                                <option value="2.5pk" {{ old('ac_capacity', $selectedCapacity) == '2.5pk' ? 'selected' : '' }}>2.5 PK</option>
-                                <option value="3pk" {{ old('ac_capacity', $selectedCapacity) == '3pk' ? 'selected' : '' }}>3 PK+</option>
-                            </select>
+                        
+                        <div class="mb-4">
+                            <label for="ac_quantity" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Unit</label>
+                            <div class="flex items-center max-w-[150px]">
+                                <button type="button" onclick="decrementQuantity()" class="w-10 h-10 bg-gray-100 rounded-l-lg hover:bg-gray-200 flex items-center justify-center" aria-label="Kurangi jumlah">
+                                    <i data-lucide="minus" class="w-4 h-4"></i>
+                                </button>
+                                <input type="number" name="ac_quantity" id="ac_quantity" value="{{ old('ac_quantity', $selectedQty) }}" min="1" max="10" class="w-full text-center border-y border-gray-200 py-2 focus:outline-none" readonly>
+                                <button type="button" onclick="incrementQuantity()" class="w-10 h-10 bg-gray-100 rounded-r-lg hover:bg-gray-200 flex items-center justify-center" aria-label="Tambah jumlah">
+                                    <i data-lucide="plus" class="w-4 h-4"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="mb-4">
-                        <label for="ac_quantity" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Unit</label>
-                        <div class="flex items-center max-w-[150px]">
-                            <button type="button" onclick="decrementQuantity()" class="w-10 h-10 bg-gray-100 rounded-l-lg hover:bg-gray-200 flex items-center justify-center" aria-label="Kurangi jumlah">
-                                <i data-lucide="minus" class="w-4 h-4"></i>
-                            </button>
-                            <input type="number" name="ac_quantity" id="ac_quantity" value="{{ old('ac_quantity', $selectedQty) }}" min="1" max="10" class="w-full text-center border-y border-gray-200 py-2 focus:outline-none" readonly>
-                            <button type="button" onclick="incrementQuantity()" class="w-10 h-10 bg-gray-100 rounded-r-lg hover:bg-gray-200 flex items-center justify-center" aria-label="Tambah jumlah">
-                                <i data-lucide="plus" class="w-4 h-4"></i>
-                            </button>
+
+                    <!-- Non-AC Services: Simple unit description -->
+                    <div x-show="!isAcService" x-cloak>
+                        <div class="mb-4">
+                            <label for="unit_description" class="block text-sm font-medium text-gray-700 mb-1">Spesifikasi Unit (Opsional)</label>
+                            <input type="text" name="unit_description" id="unit_description" value="{{ old('unit_description') }}" class="form-input" placeholder="Contoh: Mesin cuci LG 10kg, Kulkas 2 pintu Samsung, dll">
+                            <p class="text-xs text-gray-500 mt-1">Berikan detail merk dan tipe unit jika ada</p>
                         </div>
                     </div>
 
                     <div>
                         <label for="notes_full" class="block text-sm font-medium text-gray-700 mb-1">Keluhan / Catatan (Opsional)</label>
-                        <textarea name="notes" id="notes_full" rows="2" class="form-input" placeholder="Contoh: AC bocor air, remote tidak berfungsi, dll">{{ old('notes') }}</textarea>
+                        <textarea name="notes" id="notes_full" rows="2" class="form-input" placeholder="Contoh: AC bocor air, mesin cuci tidak mau berputar, dll">{{ old('notes') }}</textarea>
                     </div>
 
-                    {{-- Live Price Summary --}}
+                    {{-- Live Price Summary (AC Only) --}}
                     <div class="mt-4 bg-gradient-to-r from-primary/5 to-accent-teal/5 rounded-xl p-4 border border-primary/20" 
+                         x-show="isAcService"
                          x-data="priceCalculator()" 
                          x-init="init()">
                         <div class="flex justify-between items-center">
@@ -207,6 +222,21 @@
                             </div>
                             <div class="text-right">
                                 <p class="text-2xl font-bold text-green-600" x-text="formattedTotal"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Non-AC Price Info -->
+                    <div class="mt-4 bg-gradient-to-r from-primary/5 to-accent-teal/5 rounded-xl p-4 border border-primary/20"
+                         x-show="!isAcService && serviceName">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm text-gray-600">Layanan Dipilih:</p>
+                                <p class="text-sm text-gray-500" x-text="serviceName"></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-500">Harga akan dikonfirmasi</p>
+                                <p class="text-xs text-gray-400">setelah cek kondisi unit</p>
                             </div>
                         </div>
                     </div>

@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
-@section('title', 'AC Service - Jasa Service AC Profesional')
+@section('title', 'Tunggal Jaya Tehnik - Jasa Service AC, Mesin Cuci, Kulkas & Elektronik')
 
-@section('description', 'Jasa service AC profesional dan terpercaya. Cuci AC, isi freon, perbaikan, bongkar pasang dengan teknisi berpengalaman. Garansi layanan, harga transparan. Hubungi sekarang!')
+@section('description', 'Jasa service AC, mesin cuci, kulkas, pemasangan water heater & pompa air. Teknisi profesional berpengalaman, garansi layanan, harga terjangkau. Hubungi sekarang!')
 
 @section('content')
 <!-- Hero Section -->
@@ -96,7 +96,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <x-home.section-heading 
             title="Layanan Kami" 
-            subtitle="Berbagai layanan service AC dengan kualitas terbaik dan harga terjangkau" 
+            subtitle="Berbagai layanan service elektronik rumah tangga dengan kualitas terbaik dan harga terjangkau" 
             class="fade-up"
         />
         
@@ -313,8 +313,8 @@
 <!-- CTA Section -->
 <section class="py-16 md:py-24 bg-primary">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-up">
-        <h2 class="text-white text-3xl md:text-4xl font-extrabold mb-4">AC Bermasalah?</h2>
-        <p class="text-white/80 text-lg mb-8">Hubungi kami sekarang dan dapatkan solusi terbaik untuk AC Anda</p>
+        <h2 class="text-white text-3xl md:text-4xl font-extrabold mb-4">Butuh Service Elektronik?</h2>
+        <p class="text-white/80 text-lg mb-8">Hubungi kami sekarang untuk service AC, mesin cuci, kulkas, dan lainnya</p>
         <div class="flex justify-center">
             <a href="/order" class="btn bg-white text-primary hover:bg-gray-100 text-lg px-8 py-4 justify-center">
                 <i data-lucide="calendar" class="w-5 h-5"></i>
@@ -330,10 +330,26 @@
 $jsonLd = [
     '@context' => 'https://schema.org',
     '@type' => 'LocalBusiness',
-    'name' => $settings['site_name'] ?? 'AC Service',
-    'description' => $settings['site_description'] ?? 'Jasa service AC profesional',
+    'name' => $settings['site_name'] ?? 'Tunggal Jaya Tehnik',
+    'description' => $settings['site_description'] ?? 'Jasa service AC, mesin cuci, kulkas, water heater, dan pompa air',
+    '@id' => url('/'),
     'url' => url('/'),
     'priceRange' => 'Rp 50.000 - Rp 500.000',
+    'areaServed' => [
+        '@type' => 'City',
+        'name' => 'Sidoarjo'
+    ],
+    'hasOfferCatalog' => [
+        '@type' => 'OfferCatalog',
+        'name' => 'Layanan Service Elektronik',
+        'itemListElement' => [
+            ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Service AC']],
+            ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Service Mesin Cuci']],
+            ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Service Kulkas']],
+            ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Pemasangan Water Heater']],
+            ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Pemasangan Pompa Air']],
+        ]
+    ],
     'openingHoursSpecification' => [
         '@type' => 'OpeningHoursSpecification',
         'dayOfWeek' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],

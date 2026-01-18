@@ -11,6 +11,7 @@ class Technician extends Model
         'name',
         'phone',
         'specialty',
+        'specializations',
         'photo',
         'rating',
         'total_orders',
@@ -20,7 +21,19 @@ class Technician extends Model
     protected $casts = [
         'rating' => 'decimal:1',
         'is_active' => 'boolean',
+        'specializations' => 'array',
     ];
+
+    const SPECIALIZATIONS = [
+        'ac' => 'AC',
+        'elektronik' => 'Elektronik',
+        'instalasi' => 'Instalasi',
+    ];
+
+    public function hasSpecialization(string $category): bool
+    {
+        return in_array($category, $this->specializations ?? []);
+    }
 
     public function orders(): HasMany
     {
