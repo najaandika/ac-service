@@ -21,6 +21,8 @@ class PublicLayoutComposer
             'home' => false, // Can't detect hash anchors server-side, so no highlight on homepage
             'layanan' => request()->is('layanan/*'),
             'testimoni' => request()->routeIs('testimoni.*'),
+            'gallery' => request()->routeIs('gallery'),
+            'faq' => request()->routeIs('faq'),
             'track' => request()->routeIs('order.track'),
             'order' => request()->routeIs('order.create'),
         ]);
