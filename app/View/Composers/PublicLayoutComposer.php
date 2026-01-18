@@ -20,11 +20,11 @@ class PublicLayoutComposer
         $view->with('navActive', [
             'home' => false, // Can't detect hash anchors server-side, so no highlight on homepage
             'layanan' => request()->is('layanan/*'),
-            'testimoni' => request()->routeIs('testimoni.*'),
-            'gallery' => request()->routeIs('gallery'),
-            'faq' => request()->routeIs('faq'),
-            'track' => request()->routeIs('order.track'),
-            'order' => request()->routeIs('order.create'),
+            'testimoni' => request()->is('testimoni') || request()->is('testimoni/*'),
+            'gallery' => request()->is('gallery'),
+            'faq' => request()->is('faq'),
+            'track' => request()->is('track'),
+            'order' => request()->is('order'),
         ]);
     }
 }

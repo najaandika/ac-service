@@ -29,15 +29,15 @@
                 </div>
             </a>
             <a href="{{ route('gallery') }}" data-nav="gallery" class="block mobile-nav-link">
-                <div class="nav-item {{ ($navActive['gallery'] ?? false) ? 'nav-item-active' : 'nav-item-inactive group' }}">
-                    <i data-lucide="images" class="w-5 h-5 {{ ($navActive['gallery'] ?? false) ? '' : 'text-gray-600 group-hover:text-primary' }}"></i>
-                    <span class="{{ ($navActive['gallery'] ?? false) ? '' : 'group-hover:text-primary' }}">Gallery</span>
+                <div class="nav-item {{ ($navActive['gallery'] ?? false) ? 'nav-item-active bg-primary/10 border-l-4 border-primary' : 'nav-item-inactive group' }}">
+                    <i data-lucide="images" class="w-5 h-5 {{ ($navActive['gallery'] ?? false) ? 'text-primary' : 'text-gray-600 group-hover:text-primary' }}"></i>
+                    <span class="{{ ($navActive['gallery'] ?? false) ? 'text-primary font-semibold' : 'group-hover:text-primary' }}">Gallery</span>
                 </div>
             </a>
             <a href="{{ route('faq') }}" data-nav="faq" class="block mobile-nav-link">
-                <div class="nav-item {{ ($navActive['faq'] ?? false) ? 'nav-item-active' : 'nav-item-inactive group' }}">
-                    <i data-lucide="help-circle" class="w-5 h-5 {{ ($navActive['faq'] ?? false) ? '' : 'text-gray-600 group-hover:text-primary' }}"></i>
-                    <span class="{{ ($navActive['faq'] ?? false) ? '' : 'group-hover:text-primary' }}">FAQ</span>
+                <div class="nav-item {{ ($navActive['faq'] ?? false) ? 'nav-item-active bg-primary/10 border-l-4 border-primary' : 'nav-item-inactive group' }}">
+                    <i data-lucide="help-circle" class="w-5 h-5 {{ ($navActive['faq'] ?? false) ? 'text-primary' : 'text-gray-600 group-hover:text-primary' }}"></i>
+                    <span class="{{ ($navActive['faq'] ?? false) ? 'text-primary font-semibold' : 'group-hover:text-primary' }}">FAQ</span>
                 </div>
             </a>
             
