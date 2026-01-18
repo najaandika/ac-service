@@ -50,6 +50,9 @@ class AppServiceProvider extends ServiceProvider
             'layouts.partials.public.footer',
             'layouts.partials.public.mobile-nav',
             'home',
+            'gallery',
+            'faq',
+            'testimoni.index',
             'order.track',
             'order.success'
         ], PublicLayoutComposer::class);
